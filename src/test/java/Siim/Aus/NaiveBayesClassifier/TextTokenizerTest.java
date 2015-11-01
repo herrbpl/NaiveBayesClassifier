@@ -63,6 +63,10 @@ public class TextTokenizerTest extends TestCase {
 		// empty string
 		String testString = "";		
 		result = t.tokenizeWords(testString);
+		
+		System.out.println(result.isEmpty());
+		
+		
 		assertTrue(result.isEmpty());
 		
 		// two strings
@@ -74,7 +78,8 @@ public class TextTokenizerTest extends TestCase {
 		assertEquals(2, result.size());
 		
 		int i;
-		i = result.get("test");		
+		i = result.get("test");	
+		 
 		assertEquals(1, i);
 		
 		i = result.get("test2");		

@@ -1,5 +1,6 @@
 package Siim.Aus.NaiveBayesClassifier;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -45,9 +46,18 @@ public class TextTokenizer {
 		
 		// prepare input
 		input = prepareInput(input);
+
+		// if no input, return empty set
+		if (input == "") {
+			return result;
+		}
 		
 		// split by space
 		String[] s = input.split(" ");
+		
+		
+		
+
 		
 		// iterate over array
 		Integer c = 0;
@@ -57,7 +67,7 @@ public class TextTokenizer {
 			
 			// new word
 			if (c == null) {
-				result.put(word, 0);
+				result.put(word, 1);
 			} else {
 				c++;
 				result.put(word, c);				
