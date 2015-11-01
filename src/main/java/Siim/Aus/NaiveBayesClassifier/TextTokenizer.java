@@ -1,8 +1,6 @@
 package Siim.Aus.NaiveBayesClassifier;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,7 +38,7 @@ public class TextTokenizer {
 	 * @param input
 	 * @return
 	 */
-	protected Map<String, Integer> tokenizeWords(String input) {
+	public Map<String, Integer> tokenizeWords(String input) {
 		
 		HashMap<String, Integer> result = new HashMap<>();
 		
@@ -55,14 +53,9 @@ public class TextTokenizer {
 		// split by space
 		String[] s = input.split(" ");
 		
-		
-		
-
-		
 		// iterate over array
 		Integer c = 0;
-		for (String word : s) {
-			System.out.format("'%s'", word);
+		for (String word : s) {			
 			c = result.get(word);
 			
 			// new word
@@ -79,13 +72,15 @@ public class TextTokenizer {
 	}
 	/**
 	 * Method to tokenize a string.
-	 * @param input - text to be tokenized. Token can be a word or ngram or phrase 
+	 * @param input - text to be tokenized. Tokens can be a words or ngrams or phrases 
 	 * @return Document
 	 */
+	@Deprecated 
 	public Document tokenize(String input) {
-		String s = prepareInput(input);
 		
-		Document d = new Document();		
+		Document d = new Document();
+		d.words = tokenizeWords(input);
+
 		return d;
 	}
 }

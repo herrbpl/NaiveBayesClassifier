@@ -58,36 +58,45 @@ public class TextTokenizerTest extends TestCase {
 
 	public void testTokenizeWords() {
 		Map<String, Integer> result;
-		
-		
+
 		// empty string
-		String testString = "";		
+		String testString = "";
 		result = t.tokenizeWords(testString);
-		
+
 		System.out.println(result.isEmpty());
-		
-		
+
 		assertTrue(result.isEmpty());
-		
+
 		// two strings
-		testString = "test test2 ";		
+		testString = "test test2 ";
 		result = t.tokenizeWords(testString);
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
 		assertTrue(result.containsKey("test2"));
 		assertEquals(2, result.size());
-		
+
 		int i;
-		i = result.get("test");	
-		 
+		i = result.get("test");
+
 		assertEquals(1, i);
-		
-		i = result.get("test2");		
+
+		i = result.get("test2");
 		assertEquals(1, i);
-		
-		
-		
-		
+
+		// three strings
+		testString = "test test2 test";
+		result = t.tokenizeWords(testString);
+		assertTrue(!result.isEmpty());
+		assertTrue(result.containsKey("test"));
+		assertTrue(result.containsKey("test2"));
+		assertEquals(2, result.size());
+
+		i = result.get("test");
+
+		assertEquals(2, i);
+
+		i = result.get("test2");
+		assertEquals(1, i);
 		
 	}
 

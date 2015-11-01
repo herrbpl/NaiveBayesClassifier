@@ -30,7 +30,8 @@ Also, some information about Naive Bayes calculation was studied on:
 * It is probably wise to separate classifier it self and its configuration as classes
 * Input texts are documents
 * Documents make up corpus
-
+* Need to store category information for each feature
+	* count of features in category
 
 * Text preprocessing
 	* Load data / text from file
