@@ -33,4 +33,16 @@ public class Document {
 		this.words = words;
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		String s = "";
+		String comma = "";
+		for (Map.Entry<String, Integer> wl : words.entrySet()) {
+			s += comma + String.format("\"%s\":%d", wl.getKey(), wl.getValue());
+			comma = ",";
+		}
+		return s;
+	}
+	
 }
