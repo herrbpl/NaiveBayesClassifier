@@ -29,6 +29,8 @@ public class Corpus {
 													// containing list of
 													// documents
 	
+	public Map<String, Category> categories2;
+	
 	// TODO: create feature class
 	
 	/*
@@ -45,6 +47,9 @@ public class Corpus {
 		// Holds all features (words) and their count in categories
 		this.allFeatures = new HashMap<String, Map<String, Feature>>();
 		this.categories = new HashMap<String, List<Document>>();
+		this.categories2 = new HashMap<String, Category>();
+		Category c = new Category();
+		
 	}
 
 	@Override

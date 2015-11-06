@@ -21,7 +21,7 @@ public class Document {
 	// words in document
 	public Map<String, Integer> words;
 	
-
+	
 	public String category;
 
 	public Document() {
