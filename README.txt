@@ -39,4 +39,8 @@ Also, some information about Naive Bayes calculation was studied on:
 	* remove whitespace and punctuation
 	* tokenize
 	* remove stopwords
-	* 
+	*
+	
+Learned additionally
+
+* Implementing Iterator and Iterable  

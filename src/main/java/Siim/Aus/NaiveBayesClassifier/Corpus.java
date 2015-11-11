@@ -48,7 +48,7 @@ public class Corpus {
 		this.allFeatures = new HashMap<String, Map<String, Feature>>();
 		this.categories = new HashMap<String, List<Document>>();
 		this.categories2 = new HashMap<String, Category>();
-		Category c = new Category();
+		
 		
 	}
 
@@ -154,6 +154,7 @@ public class Corpus {
 				fcc = new HashMap<String, Feature>();
 				allFeatures.put(wl.getKey(), fcc);
 			}
+			/*
 
 			// add to feature
 			Integer countFeatures;
@@ -167,8 +168,7 @@ public class Corpus {
 			} else {
 				f.count++;				
 			}
-						
-
+			*/
 		}
 
 	}
