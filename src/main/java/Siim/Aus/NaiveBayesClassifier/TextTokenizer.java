@@ -32,15 +32,16 @@ public class TextTokenizer {
 		
 		return input;
 	}
+		
 	
 	/**
 	 * Splits input into a words and returns in form of a HashMap
 	 * @param input
 	 * @return
 	 */
-	public Map<String, Integer> tokenizeWords(String input) {
+	public Vocabulary tokenizeWords(String input) {			
 		
-		HashMap<String, Integer> result = new HashMap<>();
+		Vocabulary result = new Vocabulary();
 		
 		// prepare input
 		input = prepareInput(input);
@@ -55,21 +56,16 @@ public class TextTokenizer {
 		
 		// iterate over array
 		Integer c = 0;
-		for (String word : s) {			
-			c = result.get(word);
-			
-			// new word
-			if (c == null) {
-				result.put(word, 1);
-			} else {
-				c++;
-				result.put(word, c);				
-			}						
+		for (String word : s) {	
+			result.addFeature(word);						
 		}
 		
 		
 		return result;		
 	}
+	
+	
+	
 	/**
 	 * Method to tokenize a string.
 	 * @param input - text to be tokenized. Tokens can be a words or ngrams or phrases 
@@ -78,9 +74,7 @@ public class TextTokenizer {
 	@Deprecated 
 	public Document tokenize(String input) {
 		
-		Document d = new Document();
-		d.words = tokenizeWords(input);
-
+		Document d = new Document(input);		
 		return d;
 	}
 }

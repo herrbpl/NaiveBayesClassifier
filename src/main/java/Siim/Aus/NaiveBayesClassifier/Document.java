@@ -17,32 +17,52 @@ import java.util.Map;
  *      https://github.com/datumbox/NaiveBayesClassifier/blob/master/src/com/
  *      datumbox/opensource/dataobjects/Document.java</a>
  */
-public class Document {
-	// words in document
-	public Map<String, Integer> words;
-	
-	
+public class Document extends Vocabulary {
+			
 	public String category;
+	private String originalContent = "";
+	public TextTokenizer tokenizer = null;
+	public boolean saveContent = false;
 
 	public Document() {
 		// TODO Auto-generated constructor stub
-		this.words = new HashMap<String, Integer>();	
+		super();		
+		saveContent = false;
 	}
 	
-	public Document( Map<String, Integer> words) {
-		this.words = words;
+	protected void Tokenize(String input) {
+		if (this.tokenizer != null) {
+			Vocabulary v = this.tokenizer.tokenizeWords(input);
+			this.clear();
+			this.addVocabulary(v);
+		}
+	}
+	
+	public Document(String input) {
+		// TODO Auto-generated constructor stub
+		super();		
+		this.setOriginalContent(input);
 	}
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		String s = "";
-		String comma = "";
-		for (Map.Entry<String, Integer> wl : words.entrySet()) {
-			s += comma + String.format("\"%s\":%d", wl.getKey(), wl.getValue());
-			comma = ",";
-		}
-		return s;
+	public String getOriginalContent() {
+		
+		return originalContent;
 	}
+
+	public void setOriginalContent(String originalContent) {
+		
+		if (originalContent == this.originalContent && saveContent) {
+			return;
+		}
+		
+		if (saveContent) {
+			this.originalContent = originalContent;
+		}
+		
+		this.clear();
+		this.Tokenize(originalContent);
+	}
+	
+	
 	
 }

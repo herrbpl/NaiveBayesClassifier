@@ -58,10 +58,14 @@ public class TextTokenizerTest extends TestCase {
 
 	public void testTokenizeWords() {
 		Map<String, Integer> result;
+		Vocabulary x;
 
+		
+		
 		// empty string
 		String testString = "";
-		result = t.tokenizeWords(testString);
+		x = t.tokenizeWords(testString);
+		result = x.features;
 
 		System.out.println(result.isEmpty());
 
@@ -69,7 +73,8 @@ public class TextTokenizerTest extends TestCase {
 
 		// two strings
 		testString = "test test2 ";
-		result = t.tokenizeWords(testString);
+		x = t.tokenizeWords(testString);
+		result = x.features;
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
 		assertTrue(result.containsKey("test2"));
@@ -85,7 +90,9 @@ public class TextTokenizerTest extends TestCase {
 
 		// three strings
 		testString = "test test2 test";
-		result = t.tokenizeWords(testString);
+		x = t.tokenizeWords(testString);
+		result = x.features;
+		
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
 		assertTrue(result.containsKey("test2"));

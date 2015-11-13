@@ -48,7 +48,11 @@ public class VocabularyTest extends TestCase {
 	}
 
 	public void testCopy() {
-		
+		Vocabulary a, b;
+		a = new Vocabulary();
+		b = a.copy();
+		assertEquals(true, a.equals(b));
+		assertEquals(true, !(a==b));
 	}
 
 	public void testEquals() {
@@ -60,6 +64,39 @@ public class VocabularyTest extends TestCase {
 		assertEquals(true, a.equals(b));
 		b = a.copy();
 		assertEquals(true, a.equals(b));
+	}
+	
+	public void testAddFeature() {
+		Vocabulary a, b;
+		a = new Vocabulary();
+		a.addFeature("A").addFeature("A").addFeature("B");
+		assertEquals(2, a.getFeature("A").count);
+		assertEquals(1, a.getFeature("B").count);
+		
+	}
+	
+	public void testAddVocabulary() {
+		Vocabulary a, b;
+		a = new Vocabulary();
+		b = new Vocabulary();
+		a.addFeature("A").addFeature("B");
+		assertEquals(1, a.getFeature("A").count);
+		assertEquals(1, a.getFeature("B").count);
+		b.addFeature("A").addFeature("C");
+		assertEquals(1, b.getFeature("A").count);
+		assertEquals(1, b.getFeature("C").count);
+		a.addVocabulary(b);
+		assertEquals(2, a.getFeature("A").count);
+		assertEquals(1, a.getFeature("B").count);
+		assertEquals(1, a.getFeature("C").count);		
+		a.removeVocabulary(b);		
+		assertEquals(1, a.getFeature("A").count);
+		assertEquals(1, a.getFeature("B").count);
+		assertNull(a.getFeature("C"));
+		a.removeVocabulary(b);		
+		assertNull(a.getFeature("A"));
+		assertEquals(1, a.getFeature("B").count);
+		assertNull(a.getFeature("C"));
 	}
 
 }

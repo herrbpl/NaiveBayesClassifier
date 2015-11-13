@@ -29,16 +29,11 @@ public class Corpus {
 													// containing list of
 													// documents
 	
+	// containing all features
+	public Vocabulary allfeatures;
+	
 	public Map<String, Category> categories2;
-	
-	// TODO: create feature class
-	
-	/*
-	 * Feature Category
-	 * Likelihood word->category->(count,likelihood)
-	 * 				  ->count
-	 * 
-	 */
+		
 
 	public Corpus() {
 		// TODO Auto-generated constructor stub

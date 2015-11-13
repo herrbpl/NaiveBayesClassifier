@@ -1,5 +1,7 @@
 package Siim.Aus.NaiveBayesClassifier;
 
+import java.text.Format;
+
 /**
  * Feature class. This is just a data structure for simplified input/output to/from Vocabulary
  * @author siaus
@@ -25,4 +27,13 @@ public class Feature {
 		return feature;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.format("[\"%s\", %d, \"%s\", %f]", this.feature, count, type.toString(), loglikelihood);
+	}
+
+	public String toJSON() {
+		return String.format("{\"feature\": \"%s\", \"count\": %d, \"type\": \"%s\", \"likelihood\": %f}", this.feature.replaceAll("\"",  "&quot;"), count, type.toString(), loglikelihood);
+	}
 }
