@@ -40,8 +40,8 @@ public class Category {
 	}
 
 	public Category addDocument(String input) {
-		Document doc = new Document(input);
-		this.getDocuments().add(doc);
+		Document doc = new Document(input);		
+		this.getDocuments().add(doc);				
 		this.getVocabulary().addVocabulary(doc);		
 		return this;
 	}
@@ -52,10 +52,26 @@ public class Category {
 
 	public void setDocuments(List<Document> documents) {
 		this.documents = documents;
-
-		this.setVocabulary(this.buildVocabulary(this.getVocabulary()));
+		this.buildVocabulary(this.vocabulary);
 	}
 
+	/** 
+	 * Shortcut
+	 * @return
+	 */
+	public int getDocumentCount() {
+		return this.documents.size();
+	}
+	
+	public int featureCount(String feature) {
+		Feature f = this.vocabulary.getFeature(feature.toLowerCase().trim());
+		if (f == null) {
+			return 0;
+		}
+		return f.count;
+	}
+	
+	
 	/**
 	 * Builds category vocabulary from documents vocabulary.
 	 * 

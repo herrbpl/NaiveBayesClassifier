@@ -25,4 +25,23 @@ public class CategoryTest extends TestCase {
 		assertEquals(1,  c.getDocuments().size());
 	}
 
+	public void testGetFeatureCount() {
+		System.out.println("Test begins");
+		Category c = new Category("TEST");		
+		c.addDocument("Lammas all paremal nurgas");
+		assertEquals(1,  c.getDocuments().size());
+		
+		assertEquals(1, c.featureCount("lammas"));
+		assertEquals(1, c.featureCount("Lammas"));
+		
+		c.addDocument("Lammas all paremal nurgas");
+		
+		assertEquals(2, c.featureCount("Lammas"));
+		System.out.println(c.getVocabulary());
+		
+		c.addDocument("Lammas ülal vasakus nurgas");
+		System.out.println(c.getVocabulary());
+		assertEquals(3, c.featureCount("Lammas"));
+	}
+	
 }

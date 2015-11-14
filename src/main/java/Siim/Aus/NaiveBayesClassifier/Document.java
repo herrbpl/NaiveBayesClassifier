@@ -22,12 +22,15 @@ public class Document extends Vocabulary {
 	public String category;
 	private String content = "";
 	public TextTokenizer tokenizer = null;
+	// maybe this should be somewhere else
+	public static TextTokenizer defaultTokenizer = new TextTokenizer();
 	public boolean saveContent = false;
 
 	public Document() {
 		// TODO Auto-generated constructor stub
 		super();		
 		saveContent = false;
+		this.tokenizer = Document.defaultTokenizer;
 	}
 	
 	protected void Tokenize(String input) {
@@ -42,6 +45,7 @@ public class Document extends Vocabulary {
 		// TODO Auto-generated constructor stub
 		super();		
 		saveContent = false;
+		this.tokenizer = Document.defaultTokenizer;
 		this.setContent(input);
 	}
 

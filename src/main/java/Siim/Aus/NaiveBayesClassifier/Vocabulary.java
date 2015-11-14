@@ -174,8 +174,7 @@ public class Vocabulary implements Iterable<Feature> {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public Feature getFeature(String key) throws IllegalArgumentException {
-
+	public Feature getFeature(String key) throws IllegalArgumentException {			
 		// TODO Auto-generated method stub
 		if (!this.features.containsKey(key)) {
 			return null;
