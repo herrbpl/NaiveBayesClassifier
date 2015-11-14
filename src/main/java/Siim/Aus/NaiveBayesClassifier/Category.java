@@ -24,7 +24,7 @@ public class Category {
 		// TODO Auto-generated constructor stub
 		this.setCategory(category);
 		this.documents = new ArrayList<Document>();
-		this.vocabulary = new Vocabulary();
+		this.setVocabulary(new Vocabulary());
 	}
 
 	/**
@@ -35,14 +35,14 @@ public class Category {
 	 */
 	public Category addDocument(Document doc) {
 		this.getDocuments().add(doc);
-		this.vocabulary.addVocabulary(doc);
+		this.getVocabulary().addVocabulary(doc);
 		return this;
 	}
 
 	public Category addDocument(String input) {
 		Document doc = new Document(input);
 		this.getDocuments().add(doc);
-		this.vocabulary.addVocabulary(doc);		
+		this.getVocabulary().addVocabulary(doc);		
 		return this;
 	}
 
@@ -53,7 +53,7 @@ public class Category {
 	public void setDocuments(List<Document> documents) {
 		this.documents = documents;
 
-		this.vocabulary = this.buildVocabulary(this.vocabulary);
+		this.setVocabulary(this.buildVocabulary(this.getVocabulary()));
 	}
 
 	/**
@@ -84,6 +84,14 @@ public class Category {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public Vocabulary getVocabulary() {
+		return vocabulary;
+	}
+
+	protected void setVocabulary(Vocabulary vocabulary) {
+		this.vocabulary = vocabulary;
 	}
 
 }
