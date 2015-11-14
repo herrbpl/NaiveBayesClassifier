@@ -262,6 +262,23 @@ public class Vocabulary implements Iterable<Feature> {
 	}
 
 	/**
+	 * Sets Feature count. Setting it to zero removes feature. If feature does not exist, it is added.
+	 * @param key
+	 * @param count
+	 * @return
+	 */
+	public Vocabulary setFeatureCount(String key, int count) {
+		if (!this.features.containsKey(key)) {			
+			return this.addFeature(key, count);
+		} 
+		if (count == 0) {
+			return this.removeFeature(key);
+		}
+		this.features.put(key, count);
+		return this;
+	}
+	
+	/**
 	 * Removes feature if exists.
 	 * 
 	 * @param key

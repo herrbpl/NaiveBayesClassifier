@@ -99,4 +99,15 @@ public class VocabularyTest extends TestCase {
 		assertNull(a.getFeature("C"));
 	}
 
+	public void testSetFeatureCount() {
+		Vocabulary a;
+		a = new Vocabulary();
+		a.addFeature("TEST");
+		assertEquals(1, a.getFeature("TEST").count);
+		a.setFeatureCount("TEST", 10);
+		assertEquals(10, a.getFeature("TEST").count);
+		a.setFeatureCount("TEST", 0);
+		assertNull(a.getFeature("TEST"));
+	}
+	
 }

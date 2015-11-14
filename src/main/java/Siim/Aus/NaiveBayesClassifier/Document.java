@@ -20,7 +20,7 @@ import java.util.Map;
 public class Document extends Vocabulary {
 			
 	public String category;
-	private String originalContent = "";
+	private String content = "";
 	public TextTokenizer tokenizer = null;
 	public boolean saveContent = false;
 
@@ -41,22 +41,23 @@ public class Document extends Vocabulary {
 	public Document(String input) {
 		// TODO Auto-generated constructor stub
 		super();		
-		this.setOriginalContent(input);
+		saveContent = false;
+		this.setContent(input);
 	}
 
-	public String getOriginalContent() {
+	public String getContent() {
 		
-		return originalContent;
+		return content;
 	}
 
-	public void setOriginalContent(String originalContent) {
+	public void setContent(String originalContent) {
 		
-		if (originalContent == this.originalContent && saveContent) {
+		if (originalContent == this.content && saveContent) {
 			return;
 		}
 		
 		if (saveContent) {
-			this.originalContent = originalContent;
+			this.content = originalContent;
 		}
 		
 		this.clear();
