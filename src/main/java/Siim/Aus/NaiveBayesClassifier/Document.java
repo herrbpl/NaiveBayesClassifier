@@ -18,8 +18,7 @@ import java.util.Map;
  *      datumbox/opensource/dataobjects/Document.java</a>
  */
 public class Document extends Vocabulary {
-			
-	public String category;
+				
 	private String content = "";
 	public TextTokenizer tokenizer = null;
 	// maybe this should be somewhere else

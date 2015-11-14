@@ -46,6 +46,40 @@ public class Category {
 		return this;
 	}
 
+	/**
+	 * If instance is specific, it gets removed, else, first matching document gets removed. Loglikelihoods are not estimated for comparison
+	 * @param doc
+	 * @return
+	 */
+	public Category removeDocument(Document doc) {
+		if (this.documents.contains(doc)) {			
+			this.vocabulary.removeVocabulary(doc);
+			this.documents.remove(doc);
+			return this;
+		} else {
+			for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
+				Document document = (Document) iterator.next();
+				if (doc.equals(document)) {
+					this.vocabulary.removeVocabulary(document);
+					this.documents.remove(document);
+					break;
+				}
+			}
+			return this;
+		}				
+	}
+	
+	/**
+	 * Removes first instance of document equaling tokenized input
+	 * @param input
+	 * @return
+	 */
+	public Category removeDocument(String input) {		
+		Document d = new Document(input);
+		return this.removeDocument(d);
+	}
+	
+	
 	public List<Document> getDocuments() {
 		return documents;
 	}
@@ -109,5 +143,6 @@ public class Category {
 	protected void setVocabulary(Vocabulary vocabulary) {
 		this.vocabulary = vocabulary;
 	}
-
+	
+	
 }

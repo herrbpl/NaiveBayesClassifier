@@ -63,7 +63,14 @@ public class VocabularyTest extends TestCase {
 		b = new Vocabulary();
 		assertEquals(true, a.equals(b));
 		b = a.copy();
+		assertEquals(true, a.equals(b));		
+		b.addFeature("TEST");
+		assertEquals(false, a.equals(b));
+		a.addFeature("TEST");
 		assertEquals(true, a.equals(b));
+		a.likelihoods.put("TEST", 0.01);
+		assertEquals(true, a.equals(b));
+		assertEquals(false, a.equalsAll(b));
 	}
 	
 	public void testAddFeature() {
@@ -72,6 +79,11 @@ public class VocabularyTest extends TestCase {
 		a.addFeature("A").addFeature("A").addFeature("B");
 		assertEquals(2, a.getFeature("A").count);
 		assertEquals(1, a.getFeature("B").count);
+		a.addFeature("X",0);
+		assertEquals(0, a.getFeature("X").count);
+		a.addFeature("A",0);
+		assertEquals(2, a.getFeature("A").count);
+		System.out.println(a);
 		
 	}
 	
@@ -92,11 +104,16 @@ public class VocabularyTest extends TestCase {
 		a.removeVocabulary(b);		
 		assertEquals(1, a.getFeature("A").count);
 		assertEquals(1, a.getFeature("B").count);
-		assertNull(a.getFeature("C"));
-		a.removeVocabulary(b);		
-		assertNull(a.getFeature("A"));
+		assertEquals(0, a.getFeature("C").count);
+		a.removeVocabulary(b);				
+		assertEquals(0, a.getFeature("A").count);
 		assertEquals(1, a.getFeature("B").count);
-		assertNull(a.getFeature("C"));
+		
+		assertEquals(0, a.getFeature("C").count);
+		System.out.println(a);
+		System.out.println(b);
+		b.removeVocabulary(b);
+		System.out.println(b);
 	}
 
 	public void testSetFeatureCount() {
@@ -106,8 +123,14 @@ public class VocabularyTest extends TestCase {
 		assertEquals(1, a.getFeature("TEST").count);
 		a.setFeatureCount("TEST", 10);
 		assertEquals(10, a.getFeature("TEST").count);
-		a.setFeatureCount("TEST", 0);
-		assertNull(a.getFeature("TEST"));
+		a.setFeatureCount("TEST", 0);		
+		assertEquals(0, a.getFeature("TEST").count);
+		a.setFeatureCount("TEST", -10);
+		assertEquals(0, a.getFeature("TEST").count);
+		a.allowNegativeFeatures = true;
+		a.setFeatureCount("TEST", -10);
+		assertEquals(-10, a.getFeature("TEST").count);
+		System.out.println(a);
 	}
 	
 }

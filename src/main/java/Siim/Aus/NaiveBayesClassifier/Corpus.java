@@ -8,164 +8,133 @@ import java.util.Map;
 
 /**
  * Corpus holds data about documents and their classifications. Also information
- * about features available in corpus text. Should each document have an id for
- * specific example retrival?
+ * about features available in corpus text. On other hand, it is like Vocabulary
+ * with multiple categories Current implementation is very inefficient in terms
+ * of memory :(
  * 
  * @author siimaus
  *
  */
 public class Corpus {
-	// list of documents
-	// list of features
-	// list of categories
 
-	// public List<Document> documents;
-	public TextTokenizer tokenizer; // tokenizer engine
-	public Map<String, Map<String, Feature>> allFeatures; // list of all
-															// features and
-															// their count in
-															// categories
-	public Map<String, List<Document>> categories; // map of categories, each
-													// containing list of
-													// documents
-	
-	// containing all features
-	public Vocabulary allfeatures;
-	
-	public Map<String, Category> categories2;
-		
+	/*
+	 * likelihoods all : features, category, likelihood
+	 * 
+	 * feature | category 1 count | category 1 likelihood | category 2 |
+	 * category 3
+	 * 
+	 */
+
+	// containing all features, by category.
+	private Map<String, Vocabulary> allfeatures = null;
+	private Map<String, Category> categories = null;
 
 	public Corpus() {
-		// TODO Auto-generated constructor stub
-		// this.documents = new ArrayList<Document>();
-		this.tokenizer = new TextTokenizer();
-		// Holds all features (words) and their count in categories
-		this.allFeatures = new HashMap<String, Map<String, Feature>>();
-		this.categories = new HashMap<String, List<Document>>();
-		this.categories2 = new HashMap<String, Category>();
-		
-		
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-
-		String s = "";
-
-		String comma = "";
-
-		for (Map.Entry<String, List<Document>> cat : categories.entrySet()) {
-			s += comma + String.format("{category:\"%s\",featureCount:%d, documentCount:%d, documents:{\n", cat.getKey(), getFeatureCount(cat.getKey()),
-					cat.getValue().size());
-			comma = ",";
-			String comma2 = "";
-			for (Document document : cat.getValue()) {
-				s += comma2 + String.format("{%s}\n", document.toString());
-				comma2 = ",";
-			}
-			s += " }}\n";
-		}
-
-		return String.format("{features:%d, categories:{\n%s}}\n", getAllFeatureCount(), s);
+		allfeatures = new HashMap<>();
+		categories = new HashMap<>();
 	}
 
 	/**
-	 * Gets count of all features
-	 * 
-	 * @return count of all features
-	 */
-	public Integer getAllFeatureCount() {
-		return allFeatures.size();
-	}
-
-	/**
-	 * Gets count of features in category
+	 * Adds category to corpus
 	 * 
 	 * @param category
-	 *            - category to return count for
-	 * @return count of features in category
-	 * @throws IllegalArgumentException
+	 * @return
 	 */
-
-	public Integer getFeatureCount(String category) throws IllegalArgumentException {
-		List<Document> dl;
-
-		dl = categories.get(category);
-		// add category if it does not exists
-		if (dl == null) {
-			throw new IllegalArgumentException("Invalid category");
+	public Corpus addCategory(String category) {
+		if (!categories.containsKey(category)) {
+			Category c = new Category(category);
+			categories.put(category, c);
 		}
-
-		// count all features in category. Probably it is wiser to actually save
-		// it somewhere on adding
-		Integer count = 0;
-		for (Document document : dl) {
-			// iterate over document words
-			for (Map.Entry<String, Integer> wl : document.words.entrySet()) {
-				count += wl.getValue();
-			}
+		if (!allfeatures.containsKey(category)) {
+			Vocabulary v = new Vocabulary();
+			allfeatures.put(category, v);
 		}
-
-		return count;
+		return this;
 	}
 
 	/**
-	 * Adds input to corpus.
-	 * 
-	 * @param category
-	 *            - category to which text belongs. Should there be possibility
-	 *            of having multiple categories for one text?
-	 * @param text
-	 *            - text itself.
+	 * Returns count of all features in corpus
+	 * @return
 	 */
-
-	public void addInput(String category, String text) {
-
-		List<Document> dl;
-
-		dl = categories.get(category);
-
-		// add category if it does not exists
-		if (dl == null) {
-			dl = new ArrayList<Document>();
-			categories.put(category, dl);
-		}
-
-		// tokenize document and add to list;
-		Document d = new Document(tokenizer.tokenizeWords(text));
-		d.category = category;
-		dl.add(d);
-
-		
-		
-		// update features counts for classes. iterate over document word list.
-		for (Map.Entry<String, Integer> wl : d.words.entrySet()) {
-			// retrieve feature info
-			Map<String,Feature> fcc = allFeatures.get(wl.getKey());
-
-			// if feature does not exists in map, add it
-			if (fcc == null) {
-				fcc = new HashMap<String, Feature>();
-				allFeatures.put(wl.getKey(), fcc);
-			}
-			/*
-
-			// add to feature
-			Integer countFeatures;
-			Feature f;
-			f = fcc.get(category);
-			
-			if (f == null) {
-				f = new Feature();
-				f.count=0;
-				fcc.put(category, f);
-			} else {
-				f.count++;				
-			}
-			*/
-		}
-
+	public int getVocabularySize() {
+		return getVocabulary().size();
 	}
 
+	public Category getCategory(String category) {
+		return this.categories.get(category);
+	}
+
+	public Vocabulary getVocabulary(String category) {
+		return this.allfeatures.get(category);
+	}
+
+	public Map<String, Category> getCategories() {
+		return categories;
+	}
+	
+	/**
+	 * Gets all features as vocabulary
+	 * @return
+	 */
+	public Vocabulary getVocabulary() {
+		Vocabulary v = new Vocabulary();
+
+		// get all features
+		for (Map.Entry<String, Vocabulary> voc : allfeatures.entrySet()) {
+			v.addVocabulary(voc.getValue());
+		}
+		
+		return v;
+	}
+	
+	/**
+	 * SYnchronizes features across categories
+	 * 
+	 * @return
+	 */
+	protected Corpus syncrhonizeVocabularies() {
+		Vocabulary v = getVocabulary();		
+		for (Feature feature : v) {
+			for (Map.Entry<String, Vocabulary> voc : allfeatures.entrySet()) {
+				voc.getValue().addFeature(feature.getFeature(), 0);
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Adds document to corpus category
+	 * @param category - category
+	 * @param doc - Document
+	 * @return this
+	 */
+	public Corpus addDocument(String category, Document doc) {
+
+		// add document to category
+		this.addCategory(category).getCategory(category).addDocument(doc);
+		// add features to category vocabulary
+		this.getVocabulary(category).addVocabulary(doc);
+
+		// add zero count feature for other categories
+		for (Feature feature : doc) {
+			for (Map.Entry<String, Vocabulary> voc : this.allfeatures.entrySet()) {
+				if (voc.getKey() != category) {
+					voc.getValue().addFeature(feature.getFeature(), 0);
+				}
+			}
+		}
+
+		return this;
+	}
+	
+	/**
+	 * Adds document to corpus category;
+	 * @param category - category
+	 * @param input - Doument body as string
+	 * @return this
+	 */
+	public Corpus addDocument(String category, String input) {
+		Document doc = new Document(input);
+		return this.addDocument(category, doc);
+	}
 }

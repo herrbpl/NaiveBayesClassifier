@@ -24,6 +24,30 @@ public class CategoryTest extends TestCase {
 		c.addDocument("Lammas all paremal nurgas");
 		assertEquals(1,  c.getDocuments().size());
 	}
+	
+	public void testRemoveDocument() {
+		Category c = new Category("TEST");
+		Document d = new Document("Lammas all paremal nurgas");
+		c.addDocument(d);
+		assertEquals(1,  c.getDocuments().size());
+		c.removeDocument(d);
+		assertEquals(0,  c.getDocuments().size());
+		assertEquals(0,  c.getVocabulary().size());
+	
+		c.addDocument("Lammas all paremal nurgas");
+		assertEquals(1,  c.getDocuments().size());
+		Document e = new Document("Lammas all paremal nurgas");
+		c.removeDocument(e);
+		assertEquals(0,  c.getDocuments().size());
+		assertEquals(0,  c.getVocabulary().size());
+		
+		c.addDocument("Lammas all paremal nurgas");
+		assertEquals(1,  c.getDocuments().size());
+		c.addDocument("Lammas all paremal nurgas");
+		assertEquals(2,  c.getDocuments().size());
+		c.removeDocument("Lammas all paremal nurgas");
+		assertEquals(1,  c.getDocuments().size());
+	}
 
 	public void testGetFeatureCount() {
 		System.out.println("Test begins");

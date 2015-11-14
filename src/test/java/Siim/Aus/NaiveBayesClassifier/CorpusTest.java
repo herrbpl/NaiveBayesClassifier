@@ -7,6 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+
 
 import junit.framework.TestCase;
 
@@ -23,47 +28,11 @@ public class CorpusTest extends TestCase {
 		
 	}
 
-	public void testGetAllFeatureCount() {
-		
-		corpus = new Corpus();
-		
-		int f;
-		f = corpus.getAllFeatureCount();
-		assertEquals(0, f);
-		corpus.addInput("test", "one two three four ");
-		
-		f = corpus.getAllFeatureCount();
-		assertEquals(4, f);
-	}
+	
 	
 	public void testGetFeatureCountString() {
 		corpus = new Corpus();
-		corpus.addInput("test", "one two three four ");
-		int f;
-		f = corpus.getFeatureCount("test");
-		assertEquals(4, f);
 		
-		corpus.addInput("test2", "one two three four ");
-		f = corpus.getFeatureCount("test2");
-		assertEquals(4, f);
-		
-		f = corpus.getAllFeatureCount();
-		assertEquals(4, f);
-		
-		corpus.addInput("test2", "quick brown fox jumped over lazy dog");
-		f = corpus.getFeatureCount("test2");
-		assertEquals(11, f);
-		
-		f = corpus.getAllFeatureCount();
-		assertEquals(11, f);
-		
-		System.out.println(corpus);
-		
-		corpus.addInput("test", "one third in cash in advance ");
-		f = corpus.getAllFeatureCount();
-		assertEquals(15, f);
-		
-		System.out.println(corpus);
 		
 		
 		
@@ -100,11 +69,32 @@ public class CorpusTest extends TestCase {
             // ex.printStackTrace();
         }
         corpus = new Corpus();
-        corpus.addInput("eng", text);
-        System.out.println(corpus.getAllFeatureCount());
-        System.out.println(corpus.getFeatureCount("eng"));
+        corpus.addDocument("eng", text);
+        //corpus.addDocument("de", text);
+        System.out.println(corpus.getVocabularySize());
+        System.out.println(corpus.getCategories().keySet().toString());
+        System.out.println(corpus.getCategory("eng").getDocumentCount());
+        System.out.println(corpus.getCategory("eng").getVocabulary().size());
         //System.out.println(corpus);
+        System.out.println(corpus.getVocabulary());
         
+        List<Feature> fbyCount = corpus.getVocabulary().getFeatures();
+        
+        Collections.sort(fbyCount, 
+        	new Comparator<Feature>() {
+
+				@Override
+				public int compare(Feature o1, Feature o2) {
+					// TODO Auto-generated method stub
+					return o2.count - o1.count;
+				}
+        		
+        	}
+        );
+        
+        for (Feature feature : fbyCount) {
+			System.out.println(feature);
+		}
 	}
 	
 	

@@ -1,7 +1,9 @@
 package Siim.Aus.NaiveBayesClassifier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
@@ -25,6 +27,9 @@ public class Vocabulary implements Iterable<Feature> {
 	protected Map<String, FeatureType> featureTypes;
 	protected Map<String, Double> likelihoods;
 
+	// config 
+	public boolean allowNegativeFeatures = false;
+	
 	public Vocabulary() {
 		// TODO Auto-generated constructor stub
 		this.features = new HashMap<>();
@@ -36,7 +41,7 @@ public class Vocabulary implements Iterable<Feature> {
 	public String toString() {
 		// TODO Auto-generated method stub
 
-		StringJoiner joiner = new StringJoiner(",");
+		StringJoiner joiner = new StringJoiner(",\n");
 		for (Feature feature : this) {
 			joiner.add(feature.toString());
 		}
@@ -99,9 +104,22 @@ public class Vocabulary implements Iterable<Feature> {
 		}
 		Vocabulary v = (Vocabulary) obj;
 
-		return v.features.equals(this.features) && v.featureTypes.equals(this.featureTypes)
-				&& v.likelihoods.equals(this.likelihoods);
+		return v.features.equals(this.features) && v.featureTypes.equals(this.featureTypes);
+				//&& v.likelihoods.equals(this.likelihoods);
 
+	}
+	
+	/**
+	 * Same as equals but also compares likelihood
+	 * @param obj
+	 * @return
+	 */
+	public boolean equalsAll(Object obj) {
+		if (!(obj instanceof Vocabulary)) {
+			return false;
+		}
+		Vocabulary v = (Vocabulary) obj;
+		return this.equals(obj) && v.likelihoods.equals(this.likelihoods);
 	}
 
 	/**
@@ -185,6 +203,20 @@ public class Vocabulary implements Iterable<Feature> {
 	}
 
 	/**
+	 * Gets list of features
+	 * @return
+	 */
+	public List<Feature> getFeatures() {
+		List<Feature> l = new ArrayList<>();
+		
+		for (Feature feature : this) {
+			l.add(feature);
+		}
+		return l;
+	}
+	
+	
+	/**
 	 * Add feature if it does not exist If feature exist, check if type is same.
 	 * If not, illegal argument is thrown; If feature exist and type is same,
 	 * increase feature count by feature count.
@@ -199,10 +231,7 @@ public class Vocabulary implements Iterable<Feature> {
 			return this;
 		}
 
-		// no change because add or subtract 0;
-		if (f.count == 0) {
-			return this;
-		}
+
 
 		if (this.features.containsKey(f.getFeature())) { // feature exist
 			// add count
@@ -211,25 +240,15 @@ public class Vocabulary implements Iterable<Feature> {
 				throw new IllegalArgumentException("Feature already exist with different type");
 			}
 
-			f2.count += f.count;
+			f2.count += f.count;			
 
-			if (f2.count == 0) {
-				// remove feature
-				return this.removeFeature(f.getFeature());
-			}
-
-			this.features.put(f2.getFeature(), f2.count);
+			this.features.put(f2.getFeature(), this.checkNegativeCount(f2.count));
 			// will not change likelihood.
 
 			return this;
 
 		} else { // feature does not exist
-			// or just could silently return this
-			if (f.count < 0) {
-				// throw new IllegalArgumentException("Cannot add negative
-				// count");
-				return this;
-			}
+
 			this.features.put(f.getFeature(), f.count);
 			this.featureTypes.put(f.getFeature(), f.type);
 			this.likelihoods.put(f.getFeature(), f.loglikelihood);
@@ -261,7 +280,7 @@ public class Vocabulary implements Iterable<Feature> {
 	}
 
 	/**
-	 * Sets Feature count. Setting it to zero removes feature. If feature does not exist, it is added.
+	 * Sets Feature count. If feature does not exist, it is added.
 	 * @param key
 	 * @param count
 	 * @return
@@ -269,11 +288,8 @@ public class Vocabulary implements Iterable<Feature> {
 	public Vocabulary setFeatureCount(String key, int count) {
 		if (!this.features.containsKey(key)) {			
 			return this.addFeature(key, count);
-		} 
-		if (count == 0) {
-			return this.removeFeature(key);
-		}
-		this.features.put(key, count);
+		} 		
+		this.features.put(key, this.checkNegativeCount(count));
 		return this;
 	}
 	
@@ -304,6 +320,18 @@ public class Vocabulary implements Iterable<Feature> {
 		return this.addFeature(feature);
 	}
 
+	/**
+	 * If negative counts are allowed, it returns input, else on negative counts, it returns 0
+	 * @param count
+	 * @return
+	 */
+	protected int checkNegativeCount(int count) {
+		if (!this.allowNegativeFeatures && count <0) {
+			return 0;
+		}
+		return count;
+	}
+	
 	/**
 	 * Get default Vocabulary
 	 * 
