@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * Class contains list of documents in category, also list of features in
@@ -143,6 +144,23 @@ public class Category {
 	protected void setVocabulary(Vocabulary vocabulary) {
 		this.vocabulary = vocabulary;
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub		
+		return String.format("%s:%d:%s", this.category, this.documents.size(), this.vocabulary.toString());
+	}
 	
+	public String toJSON() {
+		StringJoiner joiner = new StringJoiner(",");
+		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
+			Document document = (Document) iterator.next();
+			joiner.add(document.toJSON()); 
+		}
+		return String.format("{\"name\":\"%s\", \"documentcount\":%d, \"documents\":[%s], \"vocabulary\":%s}", 
+				this.category, this.getDocumentCount(), joiner.toString(), this.vocabulary.toJSON()
+				);
+				
+	}
 	
 }

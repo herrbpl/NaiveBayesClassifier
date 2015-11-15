@@ -36,15 +36,15 @@ public class VocabularyTest extends TestCase {
 	
 	public void testSize() {
 		v.clear();
-		assertEquals(0, v.size());
+		assertEquals(0, v.distinctCount());
 		v.addFeature("Test");
-		assertEquals(1, v.size());
+		assertEquals(1, v.distinctCount());
 		v.addFeature("Test");
-		assertEquals(1, v.size());
+		assertEquals(1, v.distinctCount());
 		v.addFeature("Test2");
-		assertEquals(2, v.size());
+		assertEquals(2, v.distinctCount());
 		v.removeFeature("Test");
-		assertEquals(1, v.size());						
+		assertEquals(1, v.distinctCount());						
 	}
 
 	public void testCopy() {

@@ -32,14 +32,14 @@ public class CategoryTest extends TestCase {
 		assertEquals(1,  c.getDocuments().size());
 		c.removeDocument(d);
 		assertEquals(0,  c.getDocuments().size());
-		assertEquals(0,  c.getVocabulary().size());
+		assertEquals(0,  c.getVocabulary().distinctCount());
 	
 		c.addDocument("Lammas all paremal nurgas");
 		assertEquals(1,  c.getDocuments().size());
 		Document e = new Document("Lammas all paremal nurgas");
 		c.removeDocument(e);
 		assertEquals(0,  c.getDocuments().size());
-		assertEquals(0,  c.getVocabulary().size());
+		assertEquals(0,  c.getVocabulary().distinctCount());
 		
 		c.addDocument("Lammas all paremal nurgas");
 		assertEquals(1,  c.getDocuments().size());

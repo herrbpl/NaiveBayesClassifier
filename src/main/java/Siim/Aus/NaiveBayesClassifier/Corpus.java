@@ -28,10 +28,12 @@ public class Corpus {
 	// containing all features, by category.
 	private Map<String, Vocabulary> allfeatures = null;
 	private Map<String, Category> categories = null;
+	private Map<String, Double> priors = null;
 
 	public Corpus() {
 		allfeatures = new HashMap<>();
 		categories = new HashMap<>();
+		priors = new HashMap<>();
 	}
 
 	/**
@@ -54,10 +56,11 @@ public class Corpus {
 
 	/**
 	 * Returns count of all features in corpus
+	 * 
 	 * @return
 	 */
 	public int getVocabularySize() {
-		return getVocabulary().size();
+		return getVocabulary().distinctCount();
 	}
 
 	public Category getCategory(String category) {
@@ -71,9 +74,10 @@ public class Corpus {
 	public Map<String, Category> getCategories() {
 		return categories;
 	}
-	
+
 	/**
 	 * Gets all features as vocabulary
+	 * 
 	 * @return
 	 */
 	public Vocabulary getVocabulary() {
@@ -83,17 +87,17 @@ public class Corpus {
 		for (Map.Entry<String, Vocabulary> voc : allfeatures.entrySet()) {
 			v.addVocabulary(voc.getValue());
 		}
-		
+
 		return v;
 	}
-	
+
 	/**
 	 * SYnchronizes features across categories
 	 * 
 	 * @return
 	 */
 	protected Corpus syncrhonizeVocabularies() {
-		Vocabulary v = getVocabulary();		
+		Vocabulary v = getVocabulary();
 		for (Feature feature : v) {
 			for (Map.Entry<String, Vocabulary> voc : allfeatures.entrySet()) {
 				voc.getValue().addFeature(feature.getFeature(), 0);
@@ -104,8 +108,11 @@ public class Corpus {
 
 	/**
 	 * Adds document to corpus category
-	 * @param category - category
-	 * @param doc - Document
+	 * 
+	 * @param category
+	 *            - category
+	 * @param doc
+	 *            - Document
 	 * @return this
 	 */
 	public Corpus addDocument(String category, Document doc) {
@@ -126,15 +133,102 @@ public class Corpus {
 
 		return this;
 	}
-	
+
 	/**
 	 * Adds document to corpus category;
-	 * @param category - category
-	 * @param input - Doument body as string
+	 * 
+	 * @param category
+	 *            - category
+	 * @param input
+	 *            - Doument body as string
 	 * @return this
 	 */
 	public Corpus addDocument(String category, String input) {
 		Document doc = new Document(input);
 		return this.addDocument(category, doc);
+	}
+
+	public int getDocumentCount() {
+		// TODO Auto-generated method stub
+		int r = 0;
+		for (Category cat : this.categories.values()) {
+			r += cat.getDocumentCount();
+		}
+		return r;
+	}
+
+	public Corpus train() {
+		// TODO Auto-generated method stub
+
+		this.syncrhonizeVocabularies();
+
+		priors.clear();
+		Vocabulary v;
+
+		int vc = this.getVocabularySize();
+		for (Category cat : this.getCategories().values()) {
+			priors.put(cat.getCategory(), Math.log(cat.getDocumentCount() * 1.0 / this.getDocumentCount()));
+
+			v = this.getVocabulary(cat.getCategory());
+
+			for (Feature feature : v) {
+				double lh = Math.log(1.0 + feature.count) / (v.count() + vc);
+				v.likelihoods.put(feature.getFeature(), lh);
+			}
+
+		}
+
+		return this;
+	}
+
+	public Map<String, Double> getPriors() {
+		return priors;
+	}
+
+	public void setPriors(Map<String, Double> priors) {
+		this.priors = priors;
+	}
+
+	/**
+	 * Predicts category for document
+	 * 
+	 * @param d
+	 *            Document
+	 * @return
+	 */
+
+	public Map<String, Double> getPredictions(Document d) {
+		// TODO Auto-generated method stub
+
+		Map<String, Double> predictions = new HashMap<>();
+		Vocabulary v;
+		
+		for (Category cat : this.getCategories().values()) {
+			v = this.getVocabulary(cat.getCategory());
+			double lh = this.getPriors().get(cat.getCategory());
+			for (Feature feature : d) {
+				if (v.likelihoods.containsKey(feature.getFeature())) {					
+					lh += (((v.likelihoods.get(feature.getFeature())) * feature.count));
+				}
+			}
+			predictions.put(cat.getCategory(), lh);
+		}
+
+		return predictions;
+	}
+
+	public String predict(Document d) {
+		// TODO Auto-generated method stub
+		String result = "";
+		double max = -100000;
+		Map<String, Double> predictions = this.getPredictions(d);
+		for (Map.Entry<String, Double> ent : predictions.entrySet()) {
+			if (ent.getValue() > max) {
+				max = ent.getValue();
+				result = ent.getKey();
+			}
+		}
+		
+		return result;
 	}
 }

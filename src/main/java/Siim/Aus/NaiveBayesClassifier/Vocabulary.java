@@ -1,6 +1,7 @@
 package Siim.Aus.NaiveBayesClassifier;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.StringJoiner;
  * ? This would remove necessity to manage Feature references but requires
  * separate management of likelihood and feature does not know to what
  * vocabulary it belongs
+ * 2015/11/15/Siim Aus/ 
+ * 	- actually, could simplify vocabulary to two tables, one that contains  all features with counts in category count. 
+ *  - If i do not have to save documents information
  * 
  * @author siaus
  *
@@ -45,7 +49,7 @@ public class Vocabulary implements Iterable<Feature> {
 		for (Feature feature : this) {
 			joiner.add(feature.toString());
 		}
-		return String.format("%d:%s\n", this.size(), joiner.toString());
+		return String.format("%d:%s\n", this.distinctCount(), joiner.toString());
 	}
 
 	public String toJSON() {
@@ -55,7 +59,7 @@ public class Vocabulary implements Iterable<Feature> {
 		for (Feature feature : this) {
 			joiner.add(feature.toJSON());
 		}
-		return String.format("{\"size\": %d, \"features\": [%s]}", this.size(), joiner.toString());
+		return String.format("{\"size\": %d, \"features\": [%s]}", this.distinctCount(), joiner.toString());
 	}
 
 	// ===========================================================================
@@ -68,10 +72,23 @@ public class Vocabulary implements Iterable<Feature> {
 	 * @return
 	 */
 
-	public int size() {
+	public int distinctCount() {
 		return features.size();
 	}
 
+	/**
+	 * Returns count of all features in vocabulary
+	 * @return
+	 */
+	public int count() {
+		int r = 0;
+		for (Iterator<Integer> iterator = features.values().iterator(); iterator.hasNext();) {
+			Integer integer = (Integer) iterator.next();
+			r += integer;
+		}
+		return r;
+	}
+	
 	/**
 	 * Clones Vocabulary
 	 * 
@@ -369,12 +386,12 @@ public class Vocabulary implements Iterable<Feature> {
 		private final String[] keys;
 
 		public FeatureIterator() {
-			this.keys = Vocabulary.this.features.keySet().toArray(new String[Vocabulary.this.size()]);
+			this.keys = Vocabulary.this.features.keySet().toArray(new String[Vocabulary.this.distinctCount()]);
 			this.cursor = 0;
 		}
 
 		public boolean hasNext() {
-			return this.cursor < Vocabulary.this.size();
+			return this.cursor < Vocabulary.this.distinctCount();
 		}
 
 		public Feature next() {
