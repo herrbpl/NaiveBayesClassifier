@@ -133,7 +133,7 @@ public class CorpusTest extends TestCase {
 		System.out.println(Math.exp(predictions.get("c")));
 		System.out.println(Math.exp(predictions.get("j")));
 		System.out.println(predictions);
-		
+		//IMprove
 	}
 	
 
