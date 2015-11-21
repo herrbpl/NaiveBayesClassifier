@@ -46,3 +46,7 @@ ChiSquare calculation tutorial
 Learned additionally
 
 * Implementing Iterator and Iterable  
+
+Dataset(s)
+
+	* http://ai.stanford.edu/~amaas/data/sentiment/ - Large Movie Review Dataset

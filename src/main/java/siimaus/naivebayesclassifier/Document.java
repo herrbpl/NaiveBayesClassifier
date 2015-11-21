@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import siimaus.tokenizer.TextTokenizer;
+
 /**
  * Document is set of features with their count of occurrence in document Its
  * basically data structure.

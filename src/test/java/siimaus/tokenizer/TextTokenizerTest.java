@@ -1,11 +1,12 @@
-package siimaus.naivebayesclassifier;
+package siimaus.tokenizer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import siimaus.naivebayesclassifier.TextTokenizer;
+import siimaus.naivebayesclassifier.Feature;
 import siimaus.naivebayesclassifier.Vocabulary;
+import siimaus.tokenizer.TextTokenizer;
 
 public class TextTokenizerTest extends TestCase {
 
@@ -59,7 +60,7 @@ public class TextTokenizerTest extends TestCase {
 	}
 
 	public void testTokenizeWords() {
-		Map<String, Integer> result;
+		Map<String, Feature> result;
 		Vocabulary x;
 
 		
@@ -67,7 +68,7 @@ public class TextTokenizerTest extends TestCase {
 		// empty string
 		String testString = "";
 		x = t.tokenizeWords(testString);
-		result = x.features;
+		result = x.getFeatures();
 
 		System.out.println(result.isEmpty());
 
@@ -76,35 +77,35 @@ public class TextTokenizerTest extends TestCase {
 		// two strings
 		testString = "test test2 ";
 		x = t.tokenizeWords(testString);
-		result = x.features;
+		result = x.getFeatures();
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
 		assertTrue(result.containsKey("test2"));
 		assertEquals(2, result.size());
 
 		int i;
-		i = result.get("test");
+		i = result.get("test").count;
 
 		assertEquals(1, i);
 
-		i = result.get("test2");
+		i = result.get("test2").count;
 		assertEquals(1, i);
 
 		// three strings
 		testString = "test test2 test";
 		x = t.tokenizeWords(testString);
-		result = x.features;
+		result = x.getFeatures();
 		
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
 		assertTrue(result.containsKey("test2"));
 		assertEquals(2, result.size());
 
-		i = result.get("test");
+		i = result.get("test").count;
 
 		assertEquals(2, i);
 
-		i = result.get("test2");
+		i = result.get("test2").count;
 		assertEquals(1, i);
 		
 	}

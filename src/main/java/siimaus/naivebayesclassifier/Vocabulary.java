@@ -223,13 +223,12 @@ public class Vocabulary implements Iterable<Feature> {
 	 * Gets list of features
 	 * @return
 	 */
-	public List<Feature> getFeatures() {
-		List<Feature> l = new ArrayList<>();
-		
+	public Map<String, Feature> getFeatures() {
+		Map<String, Feature> result = new HashMap<>();
 		for (Feature feature : this) {
-			l.add(feature);
+			result.put(feature.getFeature(), feature);
 		}
-		return l;
+		return result;
 	}
 	
 	

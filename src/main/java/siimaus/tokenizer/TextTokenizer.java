@@ -1,15 +1,18 @@
-package siimaus.naivebayesclassifier;
+package siimaus.tokenizer;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import siimaus.naivebayesclassifier.Document;
+import siimaus.naivebayesclassifier.Vocabulary;
 
 /** 
  * Purpose of this class is to take input in form of text and turn it into Document
  * @author siimaus
  *
  */
-public class TextTokenizer {
+public class TextTokenizer implements ITokenizer {
 
 	/**
 	 * Prepare input string
@@ -69,12 +72,12 @@ public class TextTokenizer {
 	/**
 	 * Method to tokenize a string.
 	 * @param input - text to be tokenized. Tokens can be a words or ngrams or phrases 
-	 * @return Document
+	 * @return Vocabulary
 	 */
-	@Deprecated 
-	public Document tokenize(String input) {
+	@Override 
+	public Vocabulary tokenize(String input) {
+		Vocabulary result = new Vocabulary();
 		
-		Document d = new Document(input);		
-		return d;
+		return result;
 	}
 }
