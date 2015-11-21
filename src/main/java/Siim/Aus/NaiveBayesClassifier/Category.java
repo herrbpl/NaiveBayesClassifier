@@ -53,11 +53,13 @@ public class Category {
 	 * @return
 	 */
 	public Category removeDocument(Document doc) {
-		if (this.documents.contains(doc)) {			
+		if (this.documents.contains(doc)) {	
+			System.out.println("Doc found");
 			this.vocabulary.removeVocabulary(doc);
 			this.documents.remove(doc);
 			return this;
 		} else {
+			System.out.println("No do found!");
 			for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
 				Document document = (Document) iterator.next();
 				if (doc.equals(document)) {

@@ -30,16 +30,16 @@ public class CategoryTest extends TestCase {
 		Document d = new Document("Lammas all paremal nurgas");
 		c.addDocument(d);
 		assertEquals(1,  c.getDocuments().size());
-		c.removeDocument(d);
+		c.removeDocument(d);		
 		assertEquals(0,  c.getDocuments().size());
-		assertEquals(0,  c.getVocabulary().distinctCount());
+		assertEquals(4,  c.getVocabulary().distinctCount());		
 	
 		c.addDocument("Lammas all paremal nurgas");
 		assertEquals(1,  c.getDocuments().size());
 		Document e = new Document("Lammas all paremal nurgas");
 		c.removeDocument(e);
 		assertEquals(0,  c.getDocuments().size());
-		assertEquals(0,  c.getVocabulary().distinctCount());
+		assertEquals(4,  c.getVocabulary().distinctCount());
 		
 		c.addDocument("Lammas all paremal nurgas");
 		assertEquals(1,  c.getDocuments().size());
