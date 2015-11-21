@@ -9,6 +9,7 @@ import java.util.Map;
  * 
  * Should each document have distinct ID for storing and retrival to/from database?
  * Should each document preseve its original input?
+ * Document = single separate Observation
  * 
  * @author siimaus Core of this is from datumbox code, I just rewrote it for
  *         myself line by line.

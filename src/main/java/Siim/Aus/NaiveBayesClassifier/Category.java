@@ -93,11 +93,29 @@ public class Category {
 	}
 
 	/** 
-	 * Shortcut
+	 * Returns number of all documents belonging to Category
 	 * @return
 	 */
 	public int getDocumentCount() {
 		return this.documents.size();
+	}
+	
+	/**
+	 * Returns number of documents that contain this feature
+	 * @param feature
+	 * @return
+	 */
+	public int getDocumentCount(String feature) {
+
+		int res = 0;
+		for (Iterator<Document> iterator = documents.iterator(); iterator.hasNext();) {
+			Document document = (Document) iterator.next();
+			Feature f = document.getFeature(feature);
+			if (f != null && f.count > 0) {
+				res++;
+			}
+		}
+		return res;
 	}
 	
 	public int featureCount(String feature) {

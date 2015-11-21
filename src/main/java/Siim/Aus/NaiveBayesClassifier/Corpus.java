@@ -148,11 +148,29 @@ public class Corpus {
 		return this.addDocument(category, doc);
 	}
 
+	/**
+	 * Gets total documents count in corpus
+	 * @return
+	 */
 	public int getDocumentCount() {
 		// TODO Auto-generated method stub
 		int r = 0;
 		for (Category cat : this.categories.values()) {
 			r += cat.getDocumentCount();
+		}
+		return r;
+	}
+	
+	/**
+	 * Gets number of documents that contain this feature
+	 * @param feature
+	 * @return
+	 */
+	public int getDocumentCount(String feature) {
+		
+		int r = 0;
+		for (Category cat : this.categories.values()) {
+			r += cat.getDocumentCount(feature);
 		}
 		return r;
 	}
@@ -220,7 +238,7 @@ public class Corpus {
 	public String predict(Document d) {
 		// TODO Auto-generated method stub
 		String result = "";
-		double max = -100000;
+		double max = Double.NEGATIVE_INFINITY;
 		Map<String, Double> predictions = this.getPredictions(d);
 		for (Map.Entry<String, Double> ent : predictions.entrySet()) {
 			if (ent.getValue() > max) {

@@ -17,7 +17,9 @@ Also, some information about Naive Bayes calculation was studied on:
 	* http://blog.datumbox.com/developing-a-naive-bayes-text-classifier-in-java/
 	* http://blog.datumbox.com/machine-learning-tutorial-the-naive-bayes-text-classifier/
 	
-	
+ChiSquare calculation tutorial
+	* http://www.ling.upenn.edu/~clight/chisquared.htm
+	* http://math.hws.edu/javamath/ryan/ChiSquare.html	
 
 * Need list of classes/ categories
 * Need to read data from input
