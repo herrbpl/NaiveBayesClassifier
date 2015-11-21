@@ -12,7 +12,7 @@ import siimaus.naivebayesclassifier.Vocabulary;
 
 /**
  * Purpose of this class is to take input in form of text and turn it into
- * Document
+ * Vocabulary
  * 
  * @author siimaus
  *
@@ -105,8 +105,8 @@ public class TextTokenizer implements ITokenizer {
 	/**
 	 * Turns string into ngrams 
 	 * @author aioobe
-	 * http://stackoverflow.com/a/3656824
-	 * 
+	 * @see <a href="http://stackoverflow.com/a/3656824">http://stackoverflow.com/a/3656824</a>
+	 *  
 	 * @param n
 	 * @param str
 	 * @return
@@ -122,7 +122,8 @@ public class TextTokenizer implements ITokenizer {
 	/**
 	 * Concats words together
 	 * @author aioobe
-	 * http://stackoverflow.com/a/3656824 
+	 * 
+	 * @see <a href="http://stackoverflow.com/a/3656824">http://stackoverflow.com/a/3656824</a> 
 	 * @param words
 	 * @param start
 	 * @param end
