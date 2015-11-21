@@ -38,6 +38,10 @@ public class CorpusFeatureSelectionTest extends TestCase {
 						
 		assertEquals(0, score.size());		
 		
+		scoreEngine = new DummyScore();
+		score = scoreEngine.score(c);
+		System.out.println(score);
+		assertEquals(0.0, score.get("tokyo"));
 	}
 	
 }
