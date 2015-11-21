@@ -120,8 +120,7 @@ public class CorpusTest extends TestCase {
 		
 		// train
 		c.train();
-		
-		
+				
 		// predict
 		Document d = new Document("Tokyo");
 		

@@ -175,6 +175,12 @@ public class Corpus {
 		return r;
 	}
 
+	/**
+	 * Trains corpus using entered observations
+	 * What to do with feature selection? Should feature selection return new trimmed corpus or should corpus rather work with subset of selected features?
+	 * Because feature selection affects feature counting for training, this must be decided.
+	 * @return
+	 */
 	public Corpus train() {
 		// TODO Auto-generated method stub
 
