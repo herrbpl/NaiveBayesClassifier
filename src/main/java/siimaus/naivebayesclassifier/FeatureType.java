@@ -1,4 +1,4 @@
-package Siim.Aus.NaiveBayesClassifier;
+package siimaus.naivebayesclassifier;
 /**
  * Possible feature type
  * @author siaus

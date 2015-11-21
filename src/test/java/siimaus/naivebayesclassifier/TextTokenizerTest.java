@@ -1,9 +1,11 @@
-package Siim.Aus.NaiveBayesClassifier;
+package siimaus.naivebayesclassifier;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import siimaus.naivebayesclassifier.TextTokenizer;
+import siimaus.naivebayesclassifier.Vocabulary;
 
 public class TextTokenizerTest extends TestCase {
 

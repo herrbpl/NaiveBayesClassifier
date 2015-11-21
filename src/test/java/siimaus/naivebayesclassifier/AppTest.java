@@ -1,4 +1,4 @@
-package Siim.Aus.NaiveBayesClassifier;
+package siimaus.naivebayesclassifier;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

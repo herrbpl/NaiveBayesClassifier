@@ -1,4 +1,4 @@
-package Siim.Aus.NaiveBayesClassifier;
+package siimaus.naivebayesclassifier;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import siimaus.naivebayesclassifier.ChiSquareScore;
+import siimaus.naivebayesclassifier.Corpus;
+import siimaus.naivebayesclassifier.Document;
+import siimaus.naivebayesclassifier.DummyScore;
+import siimaus.naivebayesclassifier.IFeatureScore;
 
 public class CorpusFeatureSelectionTest extends TestCase {
 

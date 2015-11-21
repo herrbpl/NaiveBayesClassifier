@@ -1,4 +1,4 @@
-package Siim.Aus.NaiveBayesClassifier;
+package siimaus.naivebayesclassifier;
 
 import java.util.HashMap;
 import java.util.Map;
