@@ -189,7 +189,7 @@ public class Corpus {
 		
 		// this only works if vocabulary is large and there are enough documents
 		IFeatureScore scoreEngine = new ChiSquareScore();
-		Map<String, Double> score = scoreEngine.score(this, 10.83);
+		Map<String, Double> score = scoreEngine.score(this, 20.83);
 		if (score.size() < 10) {
 			// get all features
 			score = scoreEngine.score(this);

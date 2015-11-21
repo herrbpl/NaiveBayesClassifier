@@ -106,7 +106,8 @@ public class CorpusFeatureSelectionTest extends TestCase {
 
 	public void testVeryLargeDataset() {
 		Corpus corpus = new Corpus();
-
+		
+		Document.defaultTokenizer.stopWords = null;
 		// pos
 		String folderPos = "./aclImdb/aclImdb/test/pos";
 		String fileName = "";
@@ -172,23 +173,31 @@ public class CorpusFeatureSelectionTest extends TestCase {
 		
 		
 		folderPos = "./aclImdb/aclImdb/train/neg";
-		maxObservations = 10;
+		maxObservations = 100;
 		fileName = "";
 		currentObservations = 0;
+		int totalObservations = 0;
 		dir = new File(folderPos);
 		directoryListing = dir.listFiles();
+		int correctCount = 0;
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
 				if (child.isFile()) {
 					fileName = folderPos + File.separatorChar + child.getName();
 					Document doc = Document.fromFile(fileName);
-					System.out.println(fileName);
+					
 					
 					Map<String, Double> predictions = corpus.getPredictions(doc);
 
 					String ca = corpus.predict(doc);
-					System.out.println(ca);					
-					System.out.println(predictions);
+					if (ca.equals("neg")) { 
+						correctCount++;
+					} else {
+						System.out.println(fileName);
+						System.out.println(ca);					
+						System.out.println(predictions);
+					}
+					  
 					
 					currentObservations++;
 					if (currentObservations > maxObservations) {
@@ -198,9 +207,11 @@ public class CorpusFeatureSelectionTest extends TestCase {
 			}
 		}
 	
+		totalObservations += currentObservations;
+		
 		
 		folderPos = "./aclImdb/aclImdb/train/pos";
-		maxObservations = 10;
+		maxObservations = 100;
 		fileName = "";
 		currentObservations = 0;
 		dir = new File(folderPos);
@@ -210,13 +221,19 @@ public class CorpusFeatureSelectionTest extends TestCase {
 				if (child.isFile()) {
 					fileName = folderPos + File.separatorChar + child.getName();
 					Document doc = Document.fromFile(fileName);
-					System.out.println(fileName);
+					
 					
 					Map<String, Double> predictions = corpus.getPredictions(doc);
 
 					String ca = corpus.predict(doc);
-					System.out.println(ca);					
-					System.out.println(predictions);
+					if (ca.equals("pos")) { 
+						correctCount++;
+					} else {
+						System.out.println(fileName);
+						System.out.println(ca);					
+						System.out.println(predictions);
+					}
+					  
 					
 					currentObservations++;
 					if (currentObservations >= maxObservations) {
@@ -226,6 +243,9 @@ public class CorpusFeatureSelectionTest extends TestCase {
 			}
 		}
 		
+		totalObservations += currentObservations;
+		
+		System.out.println(String.format("Correctly guessed %d/%d (%f%%)", correctCount, totalObservations, (100.0*(correctCount/(totalObservations*1.0)))));
 	}
 
 }

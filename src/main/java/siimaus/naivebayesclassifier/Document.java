@@ -39,12 +39,13 @@ public class Document extends Vocabulary {
 		this.tokenizer = Document.defaultTokenizer;
 	}
 	
+	
 	/**
 	 * Temporary method to load file quickly. 
 	 * @param filename
 	 * @return
 	 */
-	public static Document fromFile(String fileName)  {
+	public static String fromFileText(String fileName)  {
 		String line = null;
 		String text = "";		
 		try {
@@ -54,7 +55,7 @@ public class Document extends Vocabulary {
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 			while ((line = bufferedReader.readLine()) != null) {
-				text += line;
+				text += line+"\n";
 			}
 
 			// Always close files.
@@ -69,14 +70,23 @@ public class Document extends Vocabulary {
 			// Or we could just do this:
 			// ex.printStackTrace();
 		}
-		
-		Document doc = new Document(text);
+				
+		return text;
+	}
+	
+	/**
+	 * Temporary method to load file quickly. 
+	 * @param filename
+	 * @return
+	 */
+	public static Document fromFile(String fileName)  {		
+		Document doc = new Document(fromFileText(fileName));
 		return doc;
 	}
 	
 	protected void Tokenize(String input) {
 		if (this.tokenizer != null) {
-			Vocabulary v = this.tokenizer.tokenizeWords(input);
+			Vocabulary v = this.tokenizer.tokenize(input);
 			this.clear();
 			this.addVocabulary(v);
 		}

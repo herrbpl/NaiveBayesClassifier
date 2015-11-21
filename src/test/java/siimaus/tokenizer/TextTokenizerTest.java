@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import siimaus.naivebayesclassifier.Document;
 import siimaus.naivebayesclassifier.Feature;
 import siimaus.naivebayesclassifier.Vocabulary;
 import siimaus.tokenizer.TextTokenizer;
@@ -18,7 +19,7 @@ public class TextTokenizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		t = new TextTokenizer();
+		t = new TextTokenizer();		
 	}
 
 	public void testPrepareInput() {
@@ -63,8 +64,6 @@ public class TextTokenizerTest extends TestCase {
 		Map<String, Feature> result;
 		Vocabulary x;
 
-		
-		
 		// empty string
 		String testString = "";
 		x = t.tokenizeWords(testString);
@@ -95,7 +94,7 @@ public class TextTokenizerTest extends TestCase {
 		testString = "test test2 test";
 		x = t.tokenizeWords(testString);
 		result = x.getFeatures();
-		
+
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
 		assertTrue(result.containsKey("test2"));
@@ -107,7 +106,43 @@ public class TextTokenizerTest extends TestCase {
 
 		i = result.get("test2").count;
 		assertEquals(1, i);
+
+		testString = "test test2 test wordwith nokk 123\n\n 32345 this is my car";
+		// three strings and numbers
+		//testString = "1222 test test2 test wordwith> <nokk 1234\n\n 2345 this is my car";
+		x = t.tokenizeWords(testString);
+		result = x.getFeatures();
+		System.out.println(result);
+		assertTrue(!result.isEmpty());
+		assertTrue(result.containsKey("test"));
+		assertTrue(result.containsKey("test2"));
+		assertTrue(!result.containsKey("1234"));
+		assertTrue(!result.containsKey("2345"));
+		
+		assertEquals(5, result.size());								
+	}
+	public void testTokenizeNGrams() {
+		Map<String, Feature> result;
+		Vocabulary x;
+
+		// empty string
+		String testString = "";
+		testString = "This is my car.";
+		x = t.tokenizeNGrams(testString, 3);
+		result = x.getFeatures();
+		System.out.println(result);
+		assertTrue(!result.isEmpty());
+		assertTrue(result.containsKey("this is my"));
+		assertTrue(result.containsKey("is my car"));
+		
+		testString = "This is my car.";
+		x = t.tokenizeNGrams(testString, 2);
+		result = x.getFeatures();
+		System.out.println(result);
+		assertTrue(!result.isEmpty());
+		assertTrue(result.containsKey("this is"));
+		assertTrue(result.containsKey("is my"));
+		assertTrue(result.containsKey("my car"));
 		
 	}
-
 }
