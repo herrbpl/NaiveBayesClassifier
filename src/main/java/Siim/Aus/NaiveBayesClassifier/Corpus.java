@@ -1,9 +1,6 @@
 package Siim.Aus.NaiveBayesClassifier;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -175,6 +172,7 @@ public class Corpus {
 		return r;
 	}
 
+	
 	/**
 	 * Trains corpus using entered observations
 	 * What to do with feature selection? Should feature selection return new trimmed corpus or should corpus rather work with subset of selected features?
@@ -188,17 +186,46 @@ public class Corpus {
 
 		priors.clear();
 		Vocabulary v;
-
-		int vc = this.getVocabularySize();
+		
+		// this only works if vocabulary is large and there are enough documents
+		IFeatureScore scoreEngine = new ChiSquareScore();
+		Map<String, Double> score = scoreEngine.score(this, 10.83);
+		if (score.size() < 10) {
+			// get all features
+			score = scoreEngine.score(this);
+		}				
+				
+		//int vc = this.getVocabularySize();
+		
+		int vc = score.size();
+		
+		System.out.println(String.format("Original features count: %d, selected features count: %s", this.getVocabularySize(), vc));
+		
+		
 		for (Category cat : this.getCategories().values()) {
+			
 			priors.put(cat.getCategory(), Math.log(cat.getDocumentCount() * 1.0 / this.getDocumentCount()));
 
+			
 			v = this.getVocabulary(cat.getCategory());
+			// Get vcnt that is contained in selections					
+			int vcnt = 0;
+			
+			for (Feature feature : v) {
+				if (score.containsKey(feature.getFeature())) {
+					vcnt++;
+				}
+			}
+			
 
 			for (Feature feature : v) {
-				double lh = Math.log(1.0 + feature.count) / (v.count() + vc);
-				v.likelihoods.put(feature.getFeature(), lh);
-			}
+				if (score.containsKey(feature.getFeature())) { 
+					double lh = Math.log(1.0 + feature.count) / (vcnt + vc);
+					v.likelihoods.put(feature.getFeature(), lh);
+				} else {
+					v.likelihoods.put(feature.getFeature(), Double.NaN);
+				}
+			}			
 
 		}
 
@@ -231,7 +258,8 @@ public class Corpus {
 			v = this.getVocabulary(cat.getCategory());
 			double lh = this.getPriors().get(cat.getCategory());
 			for (Feature feature : d) {
-				if (v.likelihoods.containsKey(feature.getFeature())) {					
+				if (v.likelihoods.containsKey(feature.getFeature())
+						&& !v.likelihoods.get(feature.getFeature()).isNaN()) {					
 					lh += (((v.likelihoods.get(feature.getFeature())) * feature.count));
 				}
 			}

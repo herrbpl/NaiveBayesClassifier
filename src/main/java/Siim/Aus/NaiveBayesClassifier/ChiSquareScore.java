@@ -10,6 +10,8 @@ public class ChiSquareScore implements IFeatureScore {
 	 * Following implementation was used as calculation template:
 	 * https://github.com/datumbox/NaiveBayesClassifier/blob/master/src/com/datumbox/opensource/features/FeatureExtraction.java
 	 * 
+	 * If only one category is present, no features are selected.. or all features should be selected?
+	 * 
 	 * @see <a href="https://github.com/datumbox/NaiveBayesClassifier/blob/master/src/com/datumbox/opensource/features/FeatureExtraction.java">https://github.com/datumbox/NaiveBayesClassifier/blob/master/src/com/datumbox/opensource/features/FeatureExtraction.java</a> 
 	 */
 	@Override
@@ -49,14 +51,15 @@ public class ChiSquareScore implements IFeatureScore {
 				int N10 = N1dot - N11;
 				
 				// calculate chi score
-				chisquareScore = observationCount*Math.pow(N11*N00-N10*N01, 2)/((N11+N01)*(N11+N10)*(N10+N00)*(N01+N00));
-				//String formula = String.format("(%d * POWER( ((%d * %d) - (%d * %d)),2) ) / ((%d+%d)*(%d+%d)*(%d+%d)*(%d+%d))\n", 
-				//		observationCount, N11, N00, N10, N01, N11, N01, N11, N10, N10,N00, N01, N00);
-				//System.out.println(formula);
-				
+				chisquareScore = (1.0*observationCount)*Math.pow(N11*N00-N10*N01, 2)/((N11+N01)*(N11+N10)*(N10+N00)*(N01+N00));
+				/*
+				String formula = String.format("(%d * POWER( ((%d * %d) - (%d * %d)),2) ) / ((%d+%d)*(%d+%d)*(%d+%d)*(%d+%d))\n", 
+						observationCount, N11, N00, N10, N01, N11, N01, N11, N10, N10,N00, N01, N00);
+				System.out.println(formula);
+				*/
 
 				// only if value is > cutoff value
-				if (chisquareScore < cutOff) {
+				if (chisquareScore.isNaN()  || chisquareScore < cutOff) {
 					continue;
 				}
 
