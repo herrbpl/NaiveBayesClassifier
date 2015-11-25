@@ -51,3 +51,4 @@ Dataset(s)
 
 	* http://ai.stanford.edu/~amaas/data/sentiment/ - Large Movie Review Dataset
 	* http://members.unine.ch/jacques.savoy/clef/englishST.txt - English stop words
+	* http://plg.uwaterloo.ca/~gvcormac/treccorpus/ - 2005 TREC Public Spam Corpus
