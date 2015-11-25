@@ -7,11 +7,11 @@ import junit.framework.TestCase;
 import siimaus.naivebayesclassifier.Document;
 import siimaus.naivebayesclassifier.Feature;
 import siimaus.naivebayesclassifier.Vocabulary;
-import siimaus.tokenizer.TextTokenizer;
+import siimaus.tokenizer.BaseTokenizer;
 
 public class TextTokenizerTest extends TestCase {
 
-	private TextTokenizer t;
+	private BaseTokenizer t;
 
 	public TextTokenizerTest(String name) {
 		super(name);
@@ -19,7 +19,7 @@ public class TextTokenizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		t = new TextTokenizer();		
+		t = new BaseTokenizer();		
 	}
 
 	public void testPrepareInput() {

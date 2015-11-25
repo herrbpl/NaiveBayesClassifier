@@ -170,6 +170,19 @@ public class Vocabulary implements Iterable<Feature> {
 	}
 
 	/**
+	 * Adds array of strings to this Vocabulary
+	 * 
+	 * @param otherVocabulary
+	 * @return
+	 */
+	public Vocabulary addVocabulary(String[] otherVocabulary) {
+		for (String string : otherVocabulary) {
+			this.addFeature(string);
+		}
+		return this;
+	}
+	
+	/**
 	 * Removes Vocabulary from current vocabulary
 	 * 
 	 * @param otherVocabulary

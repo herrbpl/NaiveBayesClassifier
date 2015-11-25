@@ -9,4 +9,5 @@ import siimaus.naivebayesclassifier.Vocabulary;
  */
 public interface ITokenizer {
 	public Vocabulary tokenize(String input);
+	//public String[] tokenize(String input);
 }

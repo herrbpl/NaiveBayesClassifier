@@ -1,13 +1,11 @@
 package siimaus.naivebayesclassifier;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import siimaus.tokenizer.TextTokenizer;
+import siimaus.tokenizer.BaseTokenizer;
+import siimaus.tokenizer.ITokenizer;
+import siimaus.util.FileUtils;
 
 /**
  * Document is set of features with their count of occurrence in document Its
@@ -27,51 +25,20 @@ import siimaus.tokenizer.TextTokenizer;
 public class Document extends Vocabulary {
 				
 	private String content = "";
-	public TextTokenizer tokenizer = null;
-	// maybe this should be somewhere else
-	public static TextTokenizer defaultTokenizer = new TextTokenizer();
+	public ITokenizer tokenizer = null;	
 	public boolean saveContent = false;
 
 	public Document() {
 		// TODO Auto-generated constructor stub
 		super();		
-		saveContent = false;
-		this.tokenizer = Document.defaultTokenizer;
+		saveContent = false;		
 	}
 	
-	
-	/**
-	 * Temporary method to load file quickly. 
-	 * @param filename
-	 * @return
-	 */
-	public static String fromFileText(String fileName)  {
-		String line = null;
-		String text = "";		
-		try {
-			FileReader fileReader = new FileReader(fileName);
-
-			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-			while ((line = bufferedReader.readLine()) != null) {
-				text += line+"\n";
-			}
-
-			// Always close files.
-			bufferedReader.close();
-		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-			return null;
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			return null;
-			//System.out.println("Error reading file '" + fileName + "'");
-			// Or we could just do this:
-			// ex.printStackTrace();
-		}
-				
-		return text;
+	public Document(String input, ITokenizer tokenizer) {
+		super();
+		this.saveContent = false;
+		this.tokenizer = tokenizer;
+		this.setContent(input);
 	}
 	
 	/**
@@ -80,23 +47,21 @@ public class Document extends Vocabulary {
 	 * @return
 	 */
 	public static Document fromFile(String fileName)  {		
-		Document doc = new Document(fromFileText(fileName));
+		Document doc = new Document(FileUtils.fromFileText(fileName));
 		return doc;
 	}
 	
 	protected void Tokenize(String input) {
 		if (this.tokenizer != null) {
-			Vocabulary v = this.tokenizer.tokenize(input);
 			this.clear();
-			this.addVocabulary(v);
+			this.addVocabulary(tokenizer.tokenize(input));						
 		}
 	}
 	
 	public Document(String input) {
 		// TODO Auto-generated constructor stub
 		super();		
-		saveContent = false;
-		this.tokenizer = Document.defaultTokenizer;
+		saveContent = false;		
 		this.setContent(input);
 	}
 
