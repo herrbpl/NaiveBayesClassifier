@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+import siimaus.tokenizer.ITokenizer;
+
 /**
  * Class contains list of documents in category, also list of features in
  * category
@@ -20,6 +22,12 @@ public class Category {
 
 	// Vocabulary of category
 	private Vocabulary vocabulary = null;
+	
+	// corpus reference
+	private ICorpus corpus = null;
+	
+	// tokenizer reference
+	private ITokenizer tokenizer = null;
 
 	public Category(String category) {
 		// TODO Auto-generated constructor stub
@@ -27,6 +35,19 @@ public class Category {
 		this.documents = new ArrayList<Document>();
 		this.setVocabulary(new Vocabulary());
 	}
+	
+	public Category(String category, ICorpus corpus) {
+		// TODO Auto-generated constructor stub
+		this.corpus = corpus;
+		this.setCategory(category);
+		this.documents = new ArrayList<Document>();
+		if (this.corpus == null) {
+			this.setVocabulary(new Vocabulary());
+		} else {
+			this.setVocabulary(corpus.getVocabulary(category));
+		}
+	}
+	
 
 	/**
 	 * Adds document to category;
@@ -34,17 +55,15 @@ public class Category {
 	 * @param doc
 	 * @return this
 	 */
-	public Category addDocument(Document doc) {
+	public Category addDocument(Document doc) {		
 		this.getDocuments().add(doc);
 		this.getVocabulary().addVocabulary(doc);
 		return this;
 	}
 
 	public Category addDocument(String input) {
-		Document doc = new Document(input);		
-		this.getDocuments().add(doc);				
-		this.getVocabulary().addVocabulary(doc);		
-		return this;
+		Document doc = new Document(input);
+		return this.addDocument(doc);		
 	}
 
 	/**
@@ -165,6 +184,31 @@ public class Category {
 		this.vocabulary = vocabulary;
 	}
 
+	/**
+	 * Tokenizer of category. Uses corpus tokenizer if not set exclusively
+	 * @return
+	 */
+	public ITokenizer getTokenizer() {
+		if (this.tokenizer == null) {
+			if (this.getCorpus() != null) {
+				return this.getCorpus().getTokenizer();
+			}
+		}
+		return this.tokenizer;
+	}
+
+	public void setTokenizer(ITokenizer tokenizer) {
+		this.tokenizer = tokenizer;
+	}
+	
+	/**
+	 * Gets associated corpus
+	 * @return ICorpus
+	 */
+	public ICorpus getCorpus() {
+		return this.corpus;
+	}
+	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub		
@@ -182,5 +226,8 @@ public class Category {
 				);
 				
 	}
+
+	
+	
 	
 }

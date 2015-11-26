@@ -19,7 +19,7 @@ public class TextTokenizerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		t = new BaseTokenizer();		
+		t = new BaseTokenizer(new BasicPreprocessor());		
 	}
 
 	public void testPrepareInput() {
@@ -52,6 +52,10 @@ public class TextTokenizerTest extends TestCase {
 		testString = " test  .	 test ";
 		expected = "test test";
 		assertEquals(expected, t.prepareInput(testString));
+		
+		testString = " möö  .	 mää ";
+		expected = "möö mää";
+		assertEquals(expected, t.prepareInput(testString));
 
 		// lowercasing
 		testString = " Test ";
@@ -66,7 +70,7 @@ public class TextTokenizerTest extends TestCase {
 
 		// empty string
 		String testString = "";
-		x = t.tokenizeWords(testString);
+		x = t.tokenize(testString);
 		result = x.getFeatures();
 
 		System.out.println(result.isEmpty());
@@ -75,7 +79,7 @@ public class TextTokenizerTest extends TestCase {
 
 		// two strings
 		testString = "test test2 ";
-		x = t.tokenizeWords(testString);
+		x = t.tokenize(testString);
 		result = x.getFeatures();
 		assertTrue(!result.isEmpty());
 		assertTrue(result.containsKey("test"));
@@ -92,7 +96,7 @@ public class TextTokenizerTest extends TestCase {
 
 		// three strings
 		testString = "test test2 test";
-		x = t.tokenizeWords(testString);
+		x = t.tokenize(testString);
 		result = x.getFeatures();
 
 		assertTrue(!result.isEmpty());
@@ -110,7 +114,7 @@ public class TextTokenizerTest extends TestCase {
 		testString = "test test2 test wordwith nokk 123\n\n 32345 this is my car";
 		// three strings and numbers
 		//testString = "1222 test test2 test wordwith> <nokk 1234\n\n 2345 this is my car";
-		x = t.tokenizeWords(testString);
+		x = t.tokenize(testString);
 		result = x.getFeatures();
 		System.out.println(result);
 		assertTrue(!result.isEmpty());
@@ -119,9 +123,10 @@ public class TextTokenizerTest extends TestCase {
 		assertTrue(!result.containsKey("1234"));
 		assertTrue(!result.containsKey("2345"));
 		
-		assertEquals(5, result.size());								
+		assertEquals(8, result.size());								
 	}
 	public void testTokenizeNGrams() {
+		/*
 		Map<String, Feature> result;
 		Vocabulary x;
 
@@ -143,6 +148,6 @@ public class TextTokenizerTest extends TestCase {
 		assertTrue(result.containsKey("this is"));
 		assertTrue(result.containsKey("is my"));
 		assertTrue(result.containsKey("my car"));
-		
+		*/
 	}
 }

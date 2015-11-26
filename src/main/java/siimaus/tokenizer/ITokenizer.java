@@ -8,6 +8,6 @@ import siimaus.corpus.Vocabulary;
  *
  */
 public interface ITokenizer {
-	public Vocabulary tokenize(String input);
+	public Vocabulary tokenize(String input);	
 	//public String[] tokenize(String input);
 }

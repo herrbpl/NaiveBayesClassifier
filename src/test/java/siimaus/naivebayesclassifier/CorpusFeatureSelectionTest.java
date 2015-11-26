@@ -8,11 +8,20 @@ import java.io.IOException;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import siimaus.classifier.IClassifier;
+import siimaus.classifier.NaiveBayes;
 import siimaus.corpus.Corpus;
 import siimaus.corpus.Document;
+import siimaus.corpus.ICorpus;
 import siimaus.corpus.score.ChiSquareScore;
 import siimaus.corpus.score.DummyScore;
 import siimaus.corpus.score.IFeatureScore;
+import siimaus.tokenizer.BaseTokenizer;
+import siimaus.tokenizer.BasicPreprocessor;
+import siimaus.tokenizer.IPreprocessor;
+import siimaus.tokenizer.ITokenizer;
+import siimaus.tokenizer.NGramTokenizer;
+import siimaus.util.FileUtils;
 
 public class CorpusFeatureSelectionTest extends TestCase {
 
@@ -25,7 +34,7 @@ public class CorpusFeatureSelectionTest extends TestCase {
 	}
 
 	public void testChiSquareCalculation() {
-		Corpus c = new Corpus();
+		ICorpus c = new Corpus();
 		c.addDocument("c", "Chinese Beijing Chinese");
 		c.addDocument("c", "Chinese Chinese Shangai");
 		c.addDocument("c", "Chinese Macao");
@@ -59,8 +68,10 @@ public class CorpusFeatureSelectionTest extends TestCase {
 	}
 
 	public void testChiScoreCalculationLarge() {
-
-		Corpus corpus = new Corpus();
+		ITokenizer tokenizer = new BaseTokenizer(new BasicPreprocessor());
+		
+		
+		Corpus corpus = new Corpus(tokenizer);
 		Document doc1 = Document.fromFile("./training.language.en.txt");
 		Document doc2 = Document.fromFile("./training.language.de.txt");
 		Document doc3 = Document.fromFile("./training.language.fr.txt");
@@ -89,27 +100,29 @@ public class CorpusFeatureSelectionTest extends TestCase {
 
 		}
 
-		corpus.train();
+		IClassifier cl = new NaiveBayes(corpus);
+		
+		cl.train();
 
-		Document d = new Document("Ma armastan Sind. I love you!");
+		Document d = new Document("Ma armastan Sind. I love you!", corpus.getTokenizer());
 
-		Map<String, Double> predictions = corpus.getPredictions(d);
+		
 
-		String ca = corpus.predict(d);
-		System.out.println(ca);
-		System.out.println(Math.exp(predictions.get("en")));
-		System.out.println(Math.exp(predictions.get("fr")));
-		System.out.println(Math.exp(predictions.get("de")));
-		System.out.println(predictions);
+		String ca = cl.predict(d);
+		System.out.println(ca);		
 
 	}
 
 	public void testVeryLargeDataset() {
-		Corpus corpus = new Corpus();
+		ITokenizer tokenizer = new NGramTokenizer(new BasicPreprocessor(), 3);
+						
 		
-		siimaus.corpus.defaultTokenizer.stopWords = null;
+		Corpus corpus = new Corpus(tokenizer);
+		
+		
+		//siimaus.corpus.defaultTokenizer.stopWords = null;
 		// pos
-		String folderPos = "./aclImdb/aclImdb/test/pos";
+		String folderPos = "./aclImdb/test/pos";
 		String fileName = "";
 
 		/*
@@ -127,7 +140,8 @@ public class CorpusFeatureSelectionTest extends TestCase {
 			for (File child : directoryListing) {
 				if (child.isFile()) {
 					fileName = folderPos + File.separatorChar + child.getName();
-					Document doc = Document.fromFile(fileName);
+					
+					Document doc = new Document(FileUtils.fromFileText(fileName), corpus.getTokenizer());
 					System.out.println(fileName);
 					corpus.addDocument("pos", doc);
 					currentObservations++;
@@ -141,7 +155,7 @@ public class CorpusFeatureSelectionTest extends TestCase {
 		System.out.println(corpus.getVocabularySize());
 		
 		// pos
-		folderPos = "./aclImdb/aclImdb/test/neg";
+		folderPos = "./aclImdb/test/neg";
 		fileName = "";
 
 		/*
@@ -154,7 +168,8 @@ public class CorpusFeatureSelectionTest extends TestCase {
 			for (File child : directoryListing) {
 				if (child.isFile()) {
 					fileName = folderPos + File.separatorChar + child.getName();
-					Document doc = Document.fromFile(fileName);
+					Document doc = new Document(FileUtils.fromFileText(fileName), corpus.getTokenizer());
+					
 					System.out.println(fileName);
 					corpus.addDocument("neg", doc);
 					currentObservations++;
@@ -165,14 +180,16 @@ public class CorpusFeatureSelectionTest extends TestCase {
 			}
 		}
 
-		corpus.train();
+		IClassifier cl = new NaiveBayes(corpus);
+		cl.train();
+				
 		
 		/*
 		 * Directory iteration code from http://stackoverflow.com/a/4917347
 		 */
 		
 		
-		folderPos = "./aclImdb/aclImdb/train/neg";
+		folderPos = "./aclImdb/train/neg";
 		maxObservations = 100;
 		fileName = "";
 		currentObservations = 0;
@@ -183,19 +200,16 @@ public class CorpusFeatureSelectionTest extends TestCase {
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
 				if (child.isFile()) {
-					fileName = folderPos + File.separatorChar + child.getName();
-					Document doc = Document.fromFile(fileName);
-					
-					
-					Map<String, Double> predictions = corpus.getPredictions(doc);
+					fileName = folderPos + File.separatorChar + child.getName();					
+					Document doc = new Document(FileUtils.fromFileText(fileName), corpus.getTokenizer());
+										
 
-					String ca = corpus.predict(doc);
+					String ca = cl.predict(doc);
 					if (ca.equals("neg")) { 
 						correctCount++;
 					} else {
 						System.out.println(fileName);
-						System.out.println(ca);					
-						System.out.println(predictions);
+						System.out.println(ca);											
 					}
 					  
 					
@@ -210,7 +224,7 @@ public class CorpusFeatureSelectionTest extends TestCase {
 		totalObservations += currentObservations;
 		
 		
-		folderPos = "./aclImdb/aclImdb/train/pos";
+		folderPos = "./aclImdb/train/pos";
 		maxObservations = 100;
 		fileName = "";
 		currentObservations = 0;
@@ -219,19 +233,17 @@ public class CorpusFeatureSelectionTest extends TestCase {
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
 				if (child.isFile()) {
-					fileName = folderPos + File.separatorChar + child.getName();
-					Document doc = Document.fromFile(fileName);
+					fileName = folderPos + File.separatorChar + child.getName();					
+					Document doc = new Document(FileUtils.fromFileText(fileName), corpus.getTokenizer());
 					
 					
-					Map<String, Double> predictions = corpus.getPredictions(doc);
 
-					String ca = corpus.predict(doc);
+					String ca = cl.predict(doc);
 					if (ca.equals("pos")) { 
 						correctCount++;
 					} else {
 						System.out.println(fileName);
-						System.out.println(ca);					
-						System.out.println(predictions);
+						System.out.println(ca);											
 					}
 					  
 					

@@ -70,7 +70,7 @@ public class VocabularyTest extends TestCase {
 		assertEquals(false, a.equals(b));
 		a.addFeature("TEST");
 		assertEquals(true, a.equals(b));
-		a.likelihoods.put("TEST", 0.01);
+		a.getLikelihoods().put("TEST", 0.01);
 		assertEquals(true, a.equals(b));
 		assertEquals(false, a.equalsAll(b));
 	}

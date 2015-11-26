@@ -26,6 +26,10 @@ public class BaseTokenizer implements ITokenizer {
 
 	public BaseTokenizer() {
 	}
+	
+	public BaseTokenizer(IPreprocessor proc) {
+		addPreprocessor(proc);		
+	}
 
 	public BaseTokenizer addPreprocessor(IPreprocessor proc) {
 		this.preprocessors.add(proc);
@@ -84,10 +88,9 @@ public class BaseTokenizer implements ITokenizer {
 		// split by space
 		List<String> s = this.doTokenize(input);
 		
-		// iterate over array
-		Integer c = 0;
-		for (String word : s) {
-			if (this.stopWords == null || this.stopWords.contains(word) ) {
+		// iterate over array		
+		for (String word : s) {			
+			if (this.stopWords == null || !this.stopWords.contains(word) ) {				
 				result.addFeature(word);
 			}
 		}

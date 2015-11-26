@@ -9,10 +9,12 @@ public class NGramTokenizer extends BaseTokenizer {
 	
 	protected int nGramSize = 1;
 	
-	public NGramTokenizer() {
+	public NGramTokenizer(IPreprocessor proc) {
 		// TODO Auto-generated constructor stub
+		addPreprocessor(proc);
 	}
-	public NGramTokenizer(int nGramSize) {
+	public NGramTokenizer(IPreprocessor proc, int nGramSize) {
+		addPreprocessor(proc);
 		if (nGramSize > 0 ) {
 			this.nGramSize = nGramSize;
 		}

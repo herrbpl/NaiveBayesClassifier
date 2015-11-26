@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import siimaus.corpus.Category;
-import siimaus.corpus.Corpus;
 import siimaus.corpus.Feature;
+import siimaus.corpus.ICorpus;
 
 public class ChiSquareScore implements IFeatureScore {
 
@@ -19,7 +19,7 @@ public class ChiSquareScore implements IFeatureScore {
 	 * @see <a href="https://github.com/datumbox/NaiveBayesClassifier/blob/master/src/com/datumbox/opensource/features/FeatureExtraction.java">https://github.com/datumbox/NaiveBayesClassifier/blob/master/src/com/datumbox/opensource/features/FeatureExtraction.java</a> 
 	 */
 	@Override
-	public Map<String, Double> score(Corpus corpus, Double cutOff) {
+	public Map<String, Double> score(ICorpus corpus, Double cutOff) {
 		// TODO Auto-generated method stub
 		Map<String, Double> result = new HashMap<>();
 		
@@ -83,7 +83,7 @@ public class ChiSquareScore implements IFeatureScore {
 	 * Calculate score for features and do not apply cutoff
 	 */
 	@Override
-	public Map<String, Double> score(Corpus corpus) {
+	public Map<String, Double> score(ICorpus corpus) {
 		return this.score(corpus, Double.NEGATIVE_INFINITY);
 	}
 

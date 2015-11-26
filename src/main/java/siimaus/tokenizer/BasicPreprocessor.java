@@ -14,9 +14,11 @@ public class BasicPreprocessor implements IPreprocessor {
 		}
 		input = input.replaceAll("\\r", " "). // line feeds
 				replaceAll("\\n", " "). // line feeds
-				replaceAll("\\W+", " "). // all non-word characters
+				//replaceAll("\\W+", " "). // all non-word characters
 				replaceAll("\\s+", " "). // all whitespace
-				replaceAll("\\p{P}", ""). // all punctiation
+				replaceAll("\\p{P}+", ""). // all punctiation
+				replaceAll("\\s+", " "). // all whitespace
+				replaceAll("\\p{P}+", ""). // all punctiation
 				replaceAll("^\\s*(\\d)+\\s+", " "). // all numbers in beginning
 				replaceAll("\\s+(\\d)+\\s+", " "). // all numbers in middle
 				replaceAll("\\s+(\\d)+$", " "). // all numbers in ending

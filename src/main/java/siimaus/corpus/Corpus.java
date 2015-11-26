@@ -5,6 +5,7 @@ import java.util.Map;
 
 import siimaus.corpus.score.ChiSquareScore;
 import siimaus.corpus.score.IFeatureScore;
+import siimaus.tokenizer.ITokenizer;
 
 /**
  * Corpus holds data about documents and their classifications. Also information
@@ -15,7 +16,7 @@ import siimaus.corpus.score.IFeatureScore;
  * @author siimaus
  *
  */
-public class Corpus {
+public class Corpus implements ICorpus {
 
 	/*
 	 * likelihoods all : features, category, likelihood
@@ -29,57 +30,100 @@ public class Corpus {
 	private Map<String, Vocabulary> allfeatures = null;
 	private Map<String, Category> categories = null;
 	private Map<String, Double> priors = null;
+	private ITokenizer tokenizer = null;
 
 	public Corpus() {
 		allfeatures = new HashMap<>();
 		categories = new HashMap<>();
 		priors = new HashMap<>();
 	}
+	
+	public Corpus(ITokenizer tokenizer) {
+		allfeatures = new HashMap<>();
+		categories = new HashMap<>();
+		priors = new HashMap<>();
+		this.setTokenizer(tokenizer);
+	}
+	
+	
 
-	/**
-	 * Adds category to corpus
-	 * 
-	 * @param category
-	 * @return
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#addCategory(java.lang.String)
 	 */
-	public Corpus addCategory(String category) {
-		if (!categories.containsKey(category)) {
-			Category c = new Category(category);
-			categories.put(category, c);
+	@Override
+	public ICorpus addCategory(String category) {
+		
+		if (getCategory(category) == null || getVocabulary(category) == null) {			
+			addCategory(new Category(category, this));
 		}
-		if (!allfeatures.containsKey(category)) {
+		
+		return this;
+	}
+	
+	@Override	
+	public ICorpus addCategory(Category cat) {
+		
+		if (cat == null) {			
+			return this;
+		}
+		
+		String category = cat.getCategory();
+		
+		// add features vocabulary
+		if (getVocabulary(category) == null) {			
 			Vocabulary v = new Vocabulary();
-			allfeatures.put(category, v);
-		}
+			allfeatures.put(category, v);			
+		}		
+		
+		// set and build vocabulary for feature 
+		cat.setVocabulary(
+			cat.buildVocabulary(
+					this.getVocabulary(category)
+					)
+				);
+		
+		// put category
+		categories.put(category, cat);
+				
 		return this;
 	}
 
-	/**
-	 * Returns count of all features in corpus
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getVocabularySize()
 	 */
+	@Override
 	public int getVocabularySize() {
 		return getVocabulary().distinctCount();
 	}
 
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getCategory(java.lang.String)
+	 */
+	@Override
 	public Category getCategory(String category) {
 		return this.categories.get(category);
 	}
 
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getVocabulary(java.lang.String)
+	 */
+	@Override
 	public Vocabulary getVocabulary(String category) {
 		return this.allfeatures.get(category);
 	}
 
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getCategories()
+	 */
+	@Override
 	public Map<String, Category> getCategories() {
 		return categories;
 	}
 
-	/**
-	 * Gets all features as vocabulary
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getVocabulary()
 	 */
+	@Override
 	public Vocabulary getVocabulary() {
 		Vocabulary v = new Vocabulary();
 
@@ -96,7 +140,8 @@ public class Corpus {
 	 * 
 	 * @return
 	 */
-	protected Corpus syncrhonizeVocabularies() {
+	@Override
+	public ICorpus syncrhonizeVocabularies() {
 		Vocabulary v = getVocabulary();
 		for (Feature feature : v) {
 			for (Map.Entry<String, Vocabulary> voc : allfeatures.entrySet()) {
@@ -106,22 +151,22 @@ public class Corpus {
 		return this;
 	}
 
-	/**
-	 * Adds document to corpus category
-	 * 
-	 * @param category
-	 *            - category
-	 * @param doc
-	 *            - Document
-	 * @return this
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#addDocument(java.lang.String, siimaus.corpus.Document)
 	 */
-	public Corpus addDocument(String category, Document doc) {
+	@Override
+	public ICorpus addDocument(String category, Document doc) {
 
+		Category cat = this.addCategory(category).getCategory(category);
+				
 		// add document to category
-		this.addCategory(category).getCategory(category).addDocument(doc);
-		// add features to category vocabulary
-		this.getVocabulary(category).addVocabulary(doc);
-
+		cat.addDocument(doc);
+		
+		// add features to category vocabulary.
+		// this now gets added by category.addDocument as they should share vocabulary object
+		//this.getVocabulary(category).addVocabulary(doc);
+		//syncrhonizeVocabularies();
+		/*
 		// add zero count feature for other categories
 		for (Feature feature : doc) {
 			for (Map.Entry<String, Vocabulary> voc : this.allfeatures.entrySet()) {
@@ -130,28 +175,23 @@ public class Corpus {
 				}
 			}
 		}
-
+		*/
 		return this;
 	}
 
-	/**
-	 * Adds document to corpus category;
-	 * 
-	 * @param category
-	 *            - category
-	 * @param input
-	 *            - Doument body as string
-	 * @return this
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#addDocument(java.lang.String, java.lang.String)
 	 */
-	public Corpus addDocument(String category, String input) {
-		Document doc = new Document(input);
+	@Override
+	public ICorpus addDocument(String category, String input) {
+		Document doc = new Document(input, this.getTokenizer());
 		return this.addDocument(category, doc);
 	}
 
-	/**
-	 * Gets total documents count in corpus
-	 * @return
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getDocumentCount()
 	 */
+	@Override
 	public int getDocumentCount() {
 		// TODO Auto-generated method stub
 		int r = 0;
@@ -161,11 +201,10 @@ public class Corpus {
 		return r;
 	}
 	
-	/**
-	 * Gets number of documents that contain this feature
-	 * @param feature
-	 * @return
+	/* (non-Javadoc)
+	 * @see siimaus.corpus.ICorpus#getDocumentCount(java.lang.String)
 	 */
+	@Override
 	public int getDocumentCount(String feature) {
 		
 		int r = 0;
@@ -175,115 +214,18 @@ public class Corpus {
 		return r;
 	}
 
-	
-	/**
-	 * Trains corpus using entered observations
-	 * What to do with feature selection? Should feature selection return new trimmed corpus or should corpus rather work with subset of selected features?
-	 * Because feature selection affects feature counting for training, this must be decided.
-	 * @return
-	 */
-	public Corpus train() {
+	@Override
+	public ICorpus setTokenizer(ITokenizer tokenizer) {
 		// TODO Auto-generated method stub
-
-		this.syncrhonizeVocabularies();
-
-		priors.clear();
-		Vocabulary v;
-		
-		// this only works if vocabulary is large and there are enough documents
-		IFeatureScore scoreEngine = new ChiSquareScore();
-		Map<String, Double> score = scoreEngine.score(this, 20.83);
-		if (score.size() < 10) {
-			// get all features
-			score = scoreEngine.score(this);
-		}				
-				
-		//int vc = this.getVocabularySize();
-		
-		int vc = score.size();
-		
-		System.out.println(String.format("Original features count: %d, selected features count: %s", this.getVocabularySize(), vc));
-		
-		
-		for (Category cat : this.getCategories().values()) {
-			
-			priors.put(cat.getCategory(), Math.log(cat.getDocumentCount() * 1.0 / this.getDocumentCount()));
-
-			
-			v = this.getVocabulary(cat.getCategory());
-			// Get vcnt that is contained in selections					
-			int vcnt = 0;
-			
-			for (Feature feature : v) {
-				if (score.containsKey(feature.getFeature())) {
-					vcnt++;
-				}
-			}
-			
-
-			for (Feature feature : v) {
-				if (score.containsKey(feature.getFeature())) { 
-					double lh = Math.log(1.0 + feature.count) / (vcnt + vc);
-					v.likelihoods.put(feature.getFeature(), lh);
-				} else {
-					v.likelihoods.put(feature.getFeature(), Double.NaN);
-				}
-			}			
-
-		}
-
+		this.tokenizer = tokenizer;
 		return this;
 	}
-
-	public Map<String, Double> getPriors() {
-		return priors;
-	}
-
-	public void setPriors(Map<String, Double> priors) {
-		this.priors = priors;
-	}
-
-	/**
-	 * Predicts category for document
-	 * 
-	 * @param d
-	 *            Document
-	 * @return
-	 */
-
-	public Map<String, Double> getPredictions(Document d) {
+	
+	@Override
+	public ITokenizer getTokenizer() {
 		// TODO Auto-generated method stub
-
-		Map<String, Double> predictions = new HashMap<>();
-		Vocabulary v;
-		
-		for (Category cat : this.getCategories().values()) {
-			v = this.getVocabulary(cat.getCategory());
-			double lh = this.getPriors().get(cat.getCategory());
-			for (Feature feature : d) {
-				if (v.likelihoods.containsKey(feature.getFeature())
-						&& !v.likelihoods.get(feature.getFeature()).isNaN()) {					
-					lh += (((v.likelihoods.get(feature.getFeature())) * feature.count));
-				}
-			}
-			predictions.put(cat.getCategory(), lh);
-		}
-
-		return predictions;
+		return this.tokenizer;
 	}
-
-	public String predict(Document d) {
-		// TODO Auto-generated method stub
-		String result = "";
-		double max = Double.NEGATIVE_INFINITY;
-		Map<String, Double> predictions = this.getPredictions(d);
-		for (Map.Entry<String, Double> ent : predictions.entrySet()) {
-			if (ent.getValue() > max) {
-				max = ent.getValue();
-				result = ent.getKey();
-			}
-		}
-		
-		return result;
-	}
+	
+	
 }

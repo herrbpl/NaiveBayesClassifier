@@ -362,6 +362,15 @@ public class Vocabulary implements Iterable<Feature> {
 	}
 	
 	/**
+	 * Gets likelihoods for Vocabulary.
+	 * @return
+	 */
+	public Map<String, Double> getLikelihoods() {
+		return this.likelihoods;
+	}
+	
+	
+	/**
 	 * Get default Vocabulary
 	 * 
 	 * @return

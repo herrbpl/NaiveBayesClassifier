@@ -13,14 +13,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
+import siimaus.classifier.IClassifier;
+import siimaus.classifier.NaiveBayes;
+import siimaus.corpus.Category;
 import siimaus.corpus.Corpus;
 import siimaus.corpus.Document;
+import siimaus.corpus.ICorpus;
+import siimaus.corpus.Vocabulary;
+import siimaus.tokenizer.BaseTokenizer;
+import siimaus.tokenizer.BasicPreprocessor;
+import siimaus.tokenizer.ITokenizer;
 
 public class CorpusTest extends TestCase {
 
-	private Corpus corpus;
+	private ICorpus corpus;
 	
 	public CorpusTest(String name) {
 		super(name);
@@ -33,108 +42,61 @@ public class CorpusTest extends TestCase {
 
 	
 	
-	public void testGetFeatureCountString() {
-		/*
-		corpus = new Corpus();
+	public void testCorpusBasics() {
+		ITokenizer tokenizer = new BaseTokenizer(new BasicPreprocessor());
+		Corpus c = new Corpus(tokenizer);
+		c.addCategory("A").addCategory("B");
 		
 		
 		
+		c.addDocument("A", new Document("juhuu huhu", tokenizer));
+		c.addDocument("B", new Document("BLAH", tokenizer));
+		c.addDocument("C", new Document("mööö", tokenizer));
+		c.addDocument("C", "proov");
+		c.addDocument("B","proov");
+		c.addDocument("D","proov2");		
 		
-		String line = null;
-		String text = "";
-		String fileName = "./training.language.en.txt";
-		
-		System.out.println(fileName);
-		try {
-			FileReader fileReader = 
-			        new FileReader(fileName);
-				
-
-        // Always wrap FileReader in BufferedReader.
-        BufferedReader bufferedReader = 
-            new BufferedReader(fileReader);
-
-        while((line = bufferedReader.readLine()) != null) {
-            text += line;
-        }   
-
-        // Always close files.
-        bufferedReader.close(); 
-		} catch(FileNotFoundException ex) {
-            System.out.println(
-                    "Unable to open file '" + 
-                    fileName + "'");                
-            }
-		catch(IOException ex) {
-            System.out.println(
-                "Error reading file '" 
-                + fileName + "'");                  
-            // Or we could just do this: 
-            // ex.printStackTrace();
-        }
-        corpus = new Corpus();
-        corpus.addDocument("eng", text);
-        //corpus.addDocument("de", text);
-        System.out.println(corpus.getVocabularySize());
-        System.out.println(corpus.getCategories().keySet().toString());
-        System.out.println(corpus.getCategory("eng").getDocumentCount());
-        System.out.println(corpus.getCategory("eng").getVocabulary().size());
-        //System.out.println(corpus);
-        System.out.println(corpus.getVocabulary());
-        
-        // sorting output
-        
-        List<Feature> fbyCount = corpus.getVocabulary().getFeatures();
-        
-        Collections.sort(fbyCount, 
-        	new Comparator<Feature>() {
-
-				@Override
-				public int compare(Feature o1, Feature o2) {
-					// TODO Auto-generated method stub
-					return o2.count - o1.count;
-				}
-        		
-        	}
-        );
-        
-        for (Feature feature : fbyCount) {
-			System.out.println(feature);
+		Vocabulary v;
+		for (Entry<String, Category> ent : c.getCategories().entrySet()) {
+			v = c.getVocabulary(ent.getKey());
+			System.out.println(ent.getValue());						
+			assertTrue(v.equals(ent.getValue().getVocabulary()));			
 		}
-	*/
+		
+		
+		
 	}
 	
 	public void testCorpusCalculation() {
-		// lets try real calculation
-		Corpus c = new Corpus();
+		
+		ITokenizer tokenizer = new BaseTokenizer(new BasicPreprocessor());
+		Corpus c = new Corpus(tokenizer);
+		// lets try real calculation		
 		c.addDocument("c", "Chinese Beijing Chinese");
 		c.addDocument("c", "Chinese Chinese Shangai");
 		c.addDocument("c", "Chinese Macao");
 		c.addDocument("j", "Tokyo Japan Chinese");
 		c.addDocument("j", "Tokyo Hiroshima Japan");
 		
-		System.out.println(c.getCategory("c").getVocabulary());
-		System.out.println(c.getCategory("j").getVocabulary());
-		
-		System.out.println(c.getCategory("c").getDocumentCount());
-		System.out.println(c.getCategory("c"));
-		System.out.println(c.getCategory("c").toJSON());
+		IClassifier cl = new NaiveBayes(c);
 		
 		// train
-		c.train();
+		cl.train();
 				
 		// predict
-		Document d = new Document("Tokyo");
+		Document d = new Document("Tokyo", c.getTokenizer());
 		
 		
-		Map<String, Double> predictions = c.getPredictions(d);
+		//Map<String, Double> predictions = cl.getPredictions(d);
 		
-		String ca = c.predict(d);
+		String ca = cl.predict(d);
 		System.out.println(ca);
-		System.out.println(Math.exp(predictions.get("c")));
+		
+		/*System.out.println(Math.exp(predictions.get("c")));
 		System.out.println(Math.exp(predictions.get("j")));
 		System.out.println(predictions);
-		//IMprove
+		*/
+
 	}
 	
 

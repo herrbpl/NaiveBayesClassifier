@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import siimaus.tokenizer.BaseTokenizer;
+import siimaus.tokenizer.BasicPreprocessor;
 import siimaus.tokenizer.ITokenizer;
 import siimaus.util.FileUtils;
 
@@ -37,8 +38,13 @@ public class Document extends Vocabulary {
 	public Document(String input, ITokenizer tokenizer) {
 		super();
 		this.saveContent = false;
-		this.tokenizer = tokenizer;
+		this.setTokenizer(tokenizer);
 		this.setContent(input);
+	}
+	
+	public Document setTokenizer(ITokenizer tokenizer) {
+		this.tokenizer = tokenizer;
+		return this;
 	}
 	
 	/**
@@ -51,11 +57,18 @@ public class Document extends Vocabulary {
 		return doc;
 	}
 	
+	/** 
+	 * Tokenizes input, creates basic tokenizer if not set
+	 * @param input
+	 */
 	protected void Tokenize(String input) {
-		if (this.tokenizer != null) {
-			this.clear();
-			this.addVocabulary(tokenizer.tokenize(input));						
+		if (tokenizer == null) {
+			this.setTokenizer(new BaseTokenizer(new BasicPreprocessor()));
 		}
+		
+		this.clear();			
+		this.addVocabulary(tokenizer.tokenize(input));						
+		
 	}
 	
 	public Document(String input) {
@@ -79,8 +92,7 @@ public class Document extends Vocabulary {
 		if (saveContent) {
 			this.content = originalContent;
 		}
-		
-		this.clear();
+				
 		this.Tokenize(originalContent);
 	}
 	
