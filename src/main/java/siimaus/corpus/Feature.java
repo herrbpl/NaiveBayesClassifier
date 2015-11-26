@@ -1,4 +1,4 @@
-package siimaus.naivebayesclassifier;
+package siimaus.corpus;
 
 import java.text.Format;
 

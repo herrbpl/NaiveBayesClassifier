@@ -1,7 +1,11 @@
-package siimaus.naivebayesclassifier;
+package siimaus.corpus.score;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import siimaus.corpus.Category;
+import siimaus.corpus.Corpus;
+import siimaus.corpus.Feature;
 
 public class ChiSquareScore implements IFeatureScore {
 

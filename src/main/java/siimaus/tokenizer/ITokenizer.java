@@ -1,6 +1,6 @@
 package siimaus.tokenizer;
 
-import siimaus.naivebayesclassifier.Vocabulary;
+import siimaus.corpus.Vocabulary;
 
 /**
  * Tokenizes input

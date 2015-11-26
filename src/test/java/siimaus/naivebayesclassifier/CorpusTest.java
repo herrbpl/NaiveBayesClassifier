@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import siimaus.naivebayesclassifier.Corpus;
-import siimaus.naivebayesclassifier.Document;
+import siimaus.corpus.Corpus;
+import siimaus.corpus.Document;
 
 public class CorpusTest extends TestCase {
 

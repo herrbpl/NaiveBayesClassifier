@@ -1,7 +1,10 @@
-package siimaus.naivebayesclassifier;
+package siimaus.corpus;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import siimaus.corpus.score.ChiSquareScore;
+import siimaus.corpus.score.IFeatureScore;
 
 /**
  * Corpus holds data about documents and their classifications. Also information

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import siimaus.naivebayesclassifier.Vocabulary;
+import siimaus.corpus.Vocabulary;
 import siimaus.util.FileUtils;
 
 /**

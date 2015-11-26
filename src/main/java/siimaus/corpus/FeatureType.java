@@ -1,4 +1,4 @@
-package siimaus.naivebayesclassifier;
+package siimaus.corpus;
 /**
  * Possible feature type
  * @author siaus

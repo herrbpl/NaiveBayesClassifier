@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import siimaus.naivebayesclassifier.ChiSquareScore;
-import siimaus.naivebayesclassifier.Corpus;
-import siimaus.naivebayesclassifier.Document;
-import siimaus.naivebayesclassifier.DummyScore;
-import siimaus.naivebayesclassifier.IFeatureScore;
+import siimaus.corpus.Corpus;
+import siimaus.corpus.Document;
+import siimaus.corpus.score.ChiSquareScore;
+import siimaus.corpus.score.DummyScore;
+import siimaus.corpus.score.IFeatureScore;
 
 public class CorpusFeatureSelectionTest extends TestCase {
 
@@ -107,7 +107,7 @@ public class CorpusFeatureSelectionTest extends TestCase {
 	public void testVeryLargeDataset() {
 		Corpus corpus = new Corpus();
 		
-		Document.defaultTokenizer.stopWords = null;
+		siimaus.corpus.defaultTokenizer.stopWords = null;
 		// pos
 		String folderPos = "./aclImdb/aclImdb/test/pos";
 		String fileName = "";

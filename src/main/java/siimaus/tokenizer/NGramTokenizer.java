@@ -3,7 +3,7 @@ package siimaus.tokenizer;
 import java.util.ArrayList;
 import java.util.List;
 
-import siimaus.naivebayesclassifier.Vocabulary;
+import siimaus.corpus.Vocabulary;
 
 public class NGramTokenizer extends BaseTokenizer {
 	

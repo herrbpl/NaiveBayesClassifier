@@ -1,8 +1,8 @@
 package siimaus.naivebayesclassifier;
 
 import junit.framework.TestCase;
-import siimaus.naivebayesclassifier.Feature;
-import siimaus.naivebayesclassifier.Vocabulary;
+import siimaus.corpus.Feature;
+import siimaus.corpus.Vocabulary;
 
 public class VocabularyTest extends TestCase {
 	public Vocabulary v;

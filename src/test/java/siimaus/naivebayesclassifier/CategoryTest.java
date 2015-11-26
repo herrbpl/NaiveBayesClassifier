@@ -1,8 +1,8 @@
 package siimaus.naivebayesclassifier;
 
 import junit.framework.TestCase;
-import siimaus.naivebayesclassifier.Category;
-import siimaus.naivebayesclassifier.Document;
+import siimaus.corpus.Category;
+import siimaus.corpus.Document;
 
 public class CategoryTest extends TestCase {
 

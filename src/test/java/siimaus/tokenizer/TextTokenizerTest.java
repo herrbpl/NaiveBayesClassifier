@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import siimaus.naivebayesclassifier.Document;
-import siimaus.naivebayesclassifier.Feature;
-import siimaus.naivebayesclassifier.Vocabulary;
+import siimaus.corpus.Document;
+import siimaus.corpus.Feature;
+import siimaus.corpus.Vocabulary;
 import siimaus.tokenizer.BaseTokenizer;
 
 public class TextTokenizerTest extends TestCase {
