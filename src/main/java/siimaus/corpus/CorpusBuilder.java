@@ -15,8 +15,7 @@ public abstract class CorpusBuilder<T> {
 		allObservations = new ArrayList<>();
 		tests = new ArrayList<>();
 		trainings = new ArrayList<>();
-		load();		
-		splitTestAndTrain();
+		
 	}
 	/**
 	 * Splits data between test and train
@@ -27,10 +26,12 @@ public abstract class CorpusBuilder<T> {
 		trainings.clear();
 		int trainingsCount  =(int) Math.round( 0.5*allObservations.size());
 		System.out.println(trainingsCount);
-		trainings.addAll(sample(this.allObservations, trainingsCount));
-		allObservations.removeAll(trainings);
+		
+		List<T> samples = sample(this.allObservations, trainingsCount);
+		
+		trainings.addAll(samples);		
+		allObservations.removeAll(samples);
 		tests.addAll(allObservations);
-		allObservations.addAll(tests);
 		allObservations.addAll(trainings);
 	}
 
@@ -45,9 +46,9 @@ public abstract class CorpusBuilder<T> {
 		
 		Collections.shuffle(source);
 		
-		System.out.println(String.format("Source size:%d", source.size()));
+		
 		List<T> result = source.subList(0, sampleCount);
-		System.out.println(String.format("Sampöle size:%d", result.size()));
+		
 		
 		return result;
 	
