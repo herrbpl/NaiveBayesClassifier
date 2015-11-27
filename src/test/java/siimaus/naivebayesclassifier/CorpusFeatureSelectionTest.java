@@ -104,12 +104,15 @@ public class CorpusFeatureSelectionTest extends TestCase {
 		
 		cl.train();
 
-		Document d = new Document("Ma armastan Sind. I love you!", corpus.getTokenizer());
-
-		
+		Document d = new Document("Ma armastan Sind!", corpus.getTokenizer());		
 
 		String ca = cl.predict(d);
-		System.out.println(ca);		
+		System.out.println(ca);
+		
+		d = new Document("Ich Liebe Dich!", corpus.getTokenizer());		
+
+		ca = cl.predict(d);
+		System.out.println(ca);
 
 	}
 
